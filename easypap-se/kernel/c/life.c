@@ -141,6 +141,118 @@ unsigned life_compute_tiled (unsigned nb_iter)
   return res;
 }
 
+///////////////////////////// Tiled parallel version (omp)
+//
+unsigned life_compute_omp (unsigned nb_iter)
+{
+  unsigned res = 0;
+
+  for (unsigned it = 1; it <= nb_iter; it++) {
+    
+      unsigned change = 0;
+
+      #pragma omp parallel for collapse(2) schedule(dynamic)
+      for (int y = 0; y < DIM; y += TILE_H)
+        for (int x = 0; x < DIM; x += TILE_W)
+          change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
+
+      swap_tables ();
+
+      if (!change) { // we stop if all cells are stable
+        res = it;
+        break;
+      }
+    
+  }
+
+  return res;
+}
+
+//////////////////////////
+// WIP : LAZY OPT
+void init_changes(char *changes, int nb_line, int nb_col, char init) 
+{
+  for (int x=0; x<nb_line; x++)
+    for (int y=0; y<nb_col; y++)
+      changes[x*nb_line + y] = init;
+}
+
+void save_changes(char *changes, char *prev_changes, int nb_line, int nb_col)
+{
+  for (int x=0; x<nb_line; x++)
+    for (int y=0; y<nb_col; y++)
+    {
+      prev_changes[x*nb_line + y] = changes[x*nb_line + y];
+    }
+}
+
+void print_changes(char *changes, int nb_line, int nb_col)
+{
+  for (int x=0; x<nb_line; x++)
+  {
+    printf("\n");
+    for (int y=0; y<nb_col; y++)
+      printf("%d ", changes[x*NB_TILES_X+y]);
+  }
+  printf("\n");
+}
+
+///////////////////////////// Tiled parallel lazy version (omp_lazy)
+//
+unsigned life_compute_omp_lazy (unsigned nb_iter)
+{
+  unsigned res = 0;
+  
+  char tile_changes[NB_TILES_X*NB_TILES_Y];
+  char prev_tile_changes[NB_TILES_X*NB_TILES_Y];
+  init_changes(tile_changes, NB_TILES_X, NB_TILES_Y, 0);
+  init_changes(prev_tile_changes, NB_TILES_X, NB_TILES_Y, 1);
+  
+  char do_tile_ret = 0;
+  for (unsigned it = 1; it <= nb_iter; it++) {
+    
+      printf("coucou%d\n", it);
+      unsigned change = 0;
+
+      // #pragma omp parallel for collapse(2) schedule(dynamic)
+      for (int y = 0; y < DIM; y += TILE_H)
+        for (int x = 0; x < DIM; x += TILE_W)
+        {
+          do_tile_ret = 0;
+          if (
+                ( x>0 && y>0         && prev_tile_changes[(x-1/TILE_W)*NB_TILES_X + (y-1/TILE_H)] )
+              ||( x>0 && y+1<DIM     && prev_tile_changes[(x-1/TILE_W)*NB_TILES_X + (y+1/TILE_H)] )
+              ||( x+1<DIM && y>0     && prev_tile_changes[(x+1/TILE_W)*NB_TILES_X + (y-1/TILE_H)] )
+              ||( x+1<DIM && y+1<DIM && prev_tile_changes[(x+1/TILE_W)*NB_TILES_X + (y+1/TILE_H)] )
+              ||( prev_tile_changes[(x/TILE_W)*DIM + (y/TILE_H)] )
+          )
+            do_tile_ret = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
+
+          tile_changes[(x/TILE_W) * NB_TILES_X + (y/TILE_H)] = do_tile_ret;
+          change |= do_tile_ret;
+        }
+          
+      print_changes(prev_tile_changes, NB_TILES_X, NB_TILES_Y);
+      print_changes(tile_changes, NB_TILES_X, NB_TILES_Y);
+      save_changes(tile_changes, prev_tile_changes, NB_TILES_X, NB_TILES_Y);
+      print_changes(prev_tile_changes, NB_TILES_X, NB_TILES_Y);
+      print_changes(tile_changes, NB_TILES_X, NB_TILES_Y);
+      
+      swap_tables ();
+      
+
+      if (!change) { // we stop if all cells are stable
+        res = it;
+        break;
+      }
+
+  }
+  printf("end\n");
+  return res;
+}
+// ^ WIP ^
+/////////////////////
+
 ///////////////////////////// Initial configs
 
 void life_draw_guns (void);
