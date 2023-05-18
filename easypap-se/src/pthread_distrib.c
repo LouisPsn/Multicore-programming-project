@@ -2,7 +2,7 @@
 #include "pthread_distrib.h"
 
 #include <errno.h>
-// Add comment
+
 int pthread_distrib_init (pthread_distrib_t *distrib, unsigned nb_threads,
                           unsigned nb_elements, void (*f) (void))
 {
