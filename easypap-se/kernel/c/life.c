@@ -154,6 +154,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
       if (pos_x >= 0 && pos_x < DIM/TILE_W && pos_y >= 0 && pos_y < DIM/TILE_H) {
         if (before_changed_x[pos_x] == 1 && before_changed_y[pos_y] == 1) {
           check_neigh = 1;
+          printf("pos : (%d, %d)\n", x/TILE_W, y/TILE_H);
         }
       }
     }
