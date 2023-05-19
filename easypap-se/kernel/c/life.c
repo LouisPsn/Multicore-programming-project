@@ -14,8 +14,8 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-int *has_changed_x;
-int *has_changed_y;
+static int *has_changed_x;
+static int *has_changed_y;
 
 void init_has_changed() {
   has_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
