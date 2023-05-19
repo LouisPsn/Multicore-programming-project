@@ -27,20 +27,18 @@ void init_has_changed() {
   after_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
   for (int i = 0; i < DIM/TILE_W; i++) {
     before_changed_x[i] = 1;
-    after_changed_x[i] = 0;
+    after_changed_x[i] = 1;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
     before_changed_y[j] = 1;
-    after_changed_y[j] = 0;
+    after_changed_y[j] = 1;
   }
 }
 
 void copy_changed() {
-  #pragma omp parallel for schedule(dynamic)
   for (int i = 0; i < DIM/TILE_W; i++) {
     before_changed_x[i] = after_changed_x[i];
   }
-  #pragma omp parallel for schedule(dynamic)
   for (int j = 0; j < DIM/TILE_H; j++) {
     before_changed_y[j] = after_changed_y[j];
   }
@@ -262,7 +260,6 @@ unsigned life_compute_omp (unsigned nb_iter)
         change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
 
     swap_tables ();
-    #pragma omp barrier
     copy_changed();
 
     if (!change) { // we stop if all cells are stable
