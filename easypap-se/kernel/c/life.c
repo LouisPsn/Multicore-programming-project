@@ -270,11 +270,11 @@ unsigned life_compute_omp (unsigned nb_iter)
 
         if (check_change == 1) {
           after_change_x[x/TILE_H] = 1;
-          after_change_y[x/TILE_W] = 1;
+          after_change_y[y/TILE_W] = 1;
         }
         else {
           after_change_x[x/TILE_H] = 0;
-          after_change_y[x/TILE_W] = 0;
+          after_change_y[y/TILE_W] = 0;
         }
       }
 
