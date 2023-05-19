@@ -36,9 +36,11 @@ void init_has_changed() {
 }
 
 void copy_changed() {
+  #pragma omp parallel for schedule(dynamic)
   for (int i = 0; i < DIM/TILE_W; i++) {
     before_changed_x[i] = after_changed_x[i];
   }
+  #pragma omp parallel for schedule(dynamic)
   for (int j = 0; j < DIM/TILE_H; j++) {
     before_changed_y[j] = after_changed_y[j];
   }
@@ -252,20 +254,20 @@ unsigned life_compute_omp (unsigned nb_iter)
 
   for (unsigned it = 1; it <= nb_iter; it++) {
     
-      unsigned change = 0;
+    unsigned change = 0;
 
-      #pragma omp parallel for collapse(2) schedule(dynamic)
-      for (int y = 0; y < DIM; y += TILE_H)
-        for (int x = 0; x < DIM; x += TILE_W)
-          change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
+    #pragma omp parallel for collapse(2) schedule(dynamic)
+    for (int y = 0; y < DIM; y += TILE_H)
+      for (int x = 0; x < DIM; x += TILE_W)
+        change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
 
-      swap_tables ();
-      copy_changed();
+    swap_tables ();
+    copy_changed();
 
-      if (!change) { // we stop if all cells are stable
-        res = it;
-        break;
-      }
+    if (!change) { // we stop if all cells are stable
+      res = it;
+      break;
+    }
     
   }
 
