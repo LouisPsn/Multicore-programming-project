@@ -130,7 +130,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
       int pos_x = x/TILE_W + i;
       int pos_y = y/TILE_H + j;
       if (pos_x > 0 && pos_x < DIM/TILE_W && pos_y > 0 && pos_y < DIM/TILE_H) {
-        if (has_changed_x[x_pos] == 1 && has_changed_y[y_pos] == 1) {
+        if (has_changed_x[pos_x] == 1 && has_changed_y[pos_y] == 1) {
           check_neigh = 1;
         }
       }
