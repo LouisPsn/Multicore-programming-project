@@ -23,7 +23,7 @@ void init_has_changed() {
   for (int i = 0; i < DIM/TILE_W; i++) {
     has_changed_x[i] = 1;
   }
-  for (int j = 0; j < DIM/TILE_H; i++) {
+  for (int j = 0; j < DIM/TILE_H; j++) {
     has_changed_y[i] = 1;
   }
 }
