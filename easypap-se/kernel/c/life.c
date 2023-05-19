@@ -122,8 +122,11 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 
   for (int i = -1; i <= 1; i++) {
     for (int j = -1; j <= 1; j++) {
-      if (has_changed[x/TILE_W + i + (y/TILE_H + j)*(DIM/TILE_H)] == 1) {
-        check_neigh = 1;
+      int pos = x/TILE_W + i + (y/TILE_H + j)*(DIM/TILE_H);
+        if (pos > 0 && pos < DIM) {
+          if (has_changed[pos] == 1) {
+          check_neigh = 1;
+        }
       }
     }
   }
