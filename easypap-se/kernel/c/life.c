@@ -22,7 +22,7 @@ int *a_c_y;
 
 static inline int *table_int (int *restrict i, int x)
 {
-  return i + y * DIM + x;
+  return i + x;
 }
 
 #define before_changed_x(x) (*table_int (b_c_x, (x)))
