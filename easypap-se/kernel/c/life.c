@@ -261,8 +261,8 @@ unsigned life_compute_omp (unsigned nb_iter)
       for (int x = 0; x < DIM; x += TILE_W)
         change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
 
-    #pragma omp barrier
     swap_tables ();
+    #pragma omp barrier
     copy_changed();
 
     if (!change) { // we stop if all cells are stable
