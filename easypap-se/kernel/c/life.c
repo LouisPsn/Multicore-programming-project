@@ -181,7 +181,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     }
   }
 
-  if (change_neigh == 0) {
+  if (change_neigh == 1) {
     for (int i = y; i < y + height; i++) {
       for (int j = x; j < x + width; j++) {
         if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
@@ -291,6 +291,16 @@ unsigned life_compute_omp (unsigned nb_iter)
       }
 
     store_change();
+
+    print("\n");
+    for (int i = 0; i < DIM/TILE_W; i++) {
+      for (int j = 0; j < DIM/TILE_H; j++) {
+        printf("%d ", before_change_x[i] && before_change[j]);
+      }
+      print("\n");
+    }
+    print("\n");
+
     swap_tables ();
 
     if (!change) { // we stop if all cells are stable
