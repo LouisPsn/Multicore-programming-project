@@ -210,7 +210,7 @@ unsigned life_compute_tiled (unsigned nb_iter)
 //
 unsigned life_compute_omp (unsigned nb_iter)
 {
-  init_has_changed(int height, int width);
+  init_has_changed(height, width);
 
   unsigned res = 0;
 
