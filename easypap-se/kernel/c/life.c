@@ -14,11 +14,11 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static int *before_change_x = NULL;
-static int *before_change_y = NULL;
+static int before_change_x[DIM/TILE_W] = {0};
+static int before_change_y[DIM/TILE_H] = {0};
 
-static int *after_change_x = NULL;
-static int *after_change_y = NULL;
+int after_change_x[DIM/TILE_W] = {0};
+int after_change_y[DIM/TILE_H] = {0};
 
 
 void init_has_changed() {
@@ -47,10 +47,10 @@ void init_has_changed() {
 
 void store_change() {
   for (int i = 0; i < DIM/TILE_W; i++) {
-    *before_change_x[i] = after_change_x[i];
+    before_change_x[i] = after_change_x[i];
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    *before_change_y[j] = after_change_y[j];
+    before_change_y[j] = after_change_y[j];
   }
 }
 
@@ -206,7 +206,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 //
 unsigned life_compute_seq (unsigned nb_iter)
 {
-  init_has_changed();
+  // init_has_changed();
   for (unsigned it = 1; it <= nb_iter; it++) {
 
     int change = do_tile (0, 0, DIM, DIM, 0);
@@ -218,7 +218,7 @@ unsigned life_compute_seq (unsigned nb_iter)
     store_change();
   }
 
-  free_has_changed();
+  // free_has_changed();
 
   return 0;
 }
@@ -252,7 +252,7 @@ unsigned life_compute_tiled (unsigned nb_iter)
 //
 unsigned life_compute_omp (unsigned nb_iter)
 {
-  init_has_changed();
+  // init_has_changed();
 
   unsigned res = 0;
 
@@ -288,7 +288,7 @@ unsigned life_compute_omp (unsigned nb_iter)
     store_change();
   }
 
-  free_has_changed();
+  // free_has_changed();
 
   return res;
 }
