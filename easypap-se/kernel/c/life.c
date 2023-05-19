@@ -14,23 +14,41 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static int *has_changed_x;
-static int *has_changed_y;
+static int *before_changed_x;
+static int *before_changed_y;
+
+static int *after_changed_x;
+static int *after_changed_y;
 
 void init_has_changed() {
-  has_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
-  has_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
+  before_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
+  before_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
+  after_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
+  after_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
   for (int i = 0; i < DIM/TILE_W; i++) {
-    has_changed_x[i] = 1;
+    before_changed_x[i] = 1;
+    after_changed_x[i] = 0;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    has_changed_y[j] = 1;
+    before_changed_y[j] = 1;
+    after_changed_y[j] = 0;
+  }
+}
+
+void copy_changed() {
+  for (int i = 0; i < DIM/TILE_W; i++) {
+    before_changed_x[i] = after_changed_x[i];
+  }
+  for (int j = 0; j < DIM/TILE_H; j++) {
+    before_changed_y[j] = after_changed_y[j];
   }
 }
 
 void free_has_changed() {
-  free(has_changed_x);
-  free(has_changed_y);
+  free(before_changed_x);
+  free(before_changed_y);
+  free(after_changed_x);
+  free(after_changed_y);
 }
 
 
@@ -134,7 +152,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
       pos_x = x/TILE_W + i;
       pos_y = y/TILE_H + j;
       if (pos_x >= 0 && pos_x < DIM/TILE_W && pos_y >= 0 && pos_y < DIM/TILE_H) {
-        if (has_changed_x[pos_x] == 1 && has_changed_y[pos_y] == 1) {
+        if (before_changed_x[pos_x] == 1 && before_changed_y[pos_y] == 1) {
           check_neigh = 1;
         }
       }
@@ -172,8 +190,8 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     }
   }
 
-  has_changed_x[x/TILE_W] = change;
-  has_changed_y[y/TILE_H] = change;
+  after_changed_x[x/TILE_W] = change;
+  after_changed_y[y/TILE_H] = change;
 
   return change;
 }
@@ -191,6 +209,7 @@ unsigned life_compute_seq (unsigned nb_iter)
       return it;
 
     swap_tables ();
+    copy_changed();
   }
 
   free_has_changed();
@@ -241,6 +260,7 @@ unsigned life_compute_omp (unsigned nb_iter)
           change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
 
       swap_tables ();
+      opy_changed();
 
       if (!change) { // we stop if all cells are stable
         res = it;
