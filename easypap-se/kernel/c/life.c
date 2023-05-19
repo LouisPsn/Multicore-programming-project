@@ -279,7 +279,7 @@ unsigned life_compute_omp (unsigned nb_iter)
     for (int y = 0; y < DIM; y += TILE_H) {
       for (int x = 0; x < DIM; x += TILE_W) {
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
-        printf("%d\n", check_change);
+        printf("%d", check_change);
         change |= check_change;
 
         after_change_x[x/TILE_H] = check_change;
