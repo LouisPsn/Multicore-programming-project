@@ -260,12 +260,12 @@ unsigned life_compute_omp (unsigned nb_iter)
         change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
 
     swap_tables ();
-    copy_changed();
 
     if (!change) { // we stop if all cells are stable
       res = it;
       break;
     }
+    copy_changed();
   }
 
   free_has_changed();
