@@ -209,7 +209,10 @@ int life_do_tile_sparse (int x, int y, int width, int height)
         }
       }
     }
-    printf("%d\n", change);
+    if (change == 1) {
+
+    printf("1");
+    }
   }
 
   return change;
@@ -286,6 +289,7 @@ unsigned life_compute_omp (unsigned nb_iter)
         after_change_y[y/TILE_W] = check_change;
       }
     }
+    printf("\n");
 
     store_change();
 
