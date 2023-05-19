@@ -285,7 +285,7 @@ unsigned life_compute_omp (unsigned nb_iter)
       res = it;
       break;
     }
-    copy_change();
+    store_change();
   }
 
   free_has_changed();
