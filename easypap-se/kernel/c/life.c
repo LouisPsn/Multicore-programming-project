@@ -47,10 +47,10 @@ void init_has_changed() {
 
 void store_change() {
   for (int i = 0; i < DIM/TILE_W; i++) {
-    before_change_x[i] = after_change_x[i];
+    *before_change_x[i] = after_change_x[i];
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_change_y[j] = after_change_y[j];
+    *before_change_y[j] = after_change_y[j];
   }
 }
 
