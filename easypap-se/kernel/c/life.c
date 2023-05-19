@@ -275,12 +275,12 @@ unsigned life_compute_omp (unsigned nb_iter)
     unsigned change = 0;
 
     printf("\n");
-    for (int i = 0; i < DIM/TILE_W; i++) {
-      for (int j = 0; j < DIM/TILE_H; j++) {
-        printf("%d", (after_change_x[i] == 1) && (after_change_y[j] == 1));
-      }
-      printf("\n");
-    }
+    // for (int i = 0; i < DIM/TILE_W; i++) {
+    //   for (int j = 0; j < DIM/TILE_H; j++) {
+    //     printf("%d", (after_change_x[i] == 1) && (after_change_y[j] == 1));
+    //   }
+    //   printf("\n");
+    // }
     printf("\n");
 
     printf("\n");
@@ -289,6 +289,10 @@ unsigned life_compute_omp (unsigned nb_iter)
       for (int x = 0; x < DIM; x += TILE_W) {
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
+
+        if (check_change == 1) {
+          printf("%d", check_change);
+        }
 
         after_change_x[x/TILE_H] = check_change;
         after_change_y[y/TILE_W] = check_change;
