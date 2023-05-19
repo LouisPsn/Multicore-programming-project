@@ -20,10 +20,10 @@ int *b_c_y;
 int *a_c_x;
 int *a_c_y;
 
-#define before_changed_x(x) (*int (b_c_x, (x)))
-#define before_changed_y(y) (*int (b_c_y, (y)))
-#define after_changed_x(x) (*int (a_c_x, (x)))
-#define after_changed_y(y) (*int (a_c_y, (y)))
+#define before_changed_x(x) (*table_int (b_c_x, (x)))
+#define before_changed_y(y) (*table_int (b_c_y, (y)))
+#define after_changed_x(x) (*table_int (a_c_x, (x)))
+#define after_changed_y(y) (*table_int (a_c_y, (y)))
 
 void init_has_changed() {
   b_c_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
