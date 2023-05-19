@@ -170,7 +170,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
   }
 
   has_changed_x[x/TILE_W] = change;
-  has_changed_y[y/TILE_W] = change;
+  has_changed_y[y/TILE_H] = change;
 
   return change;
 }
