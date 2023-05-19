@@ -46,15 +46,15 @@ void init_has_changed() {
 }
 
 void store_change() {
-  int *tmp_x = 0;
-  int *tmp_y = 0;
+  int tmp_x = 0;
+  int tmp_y = 0;
   for (int i = 0; i < DIM/TILE_W; i++) {
-    *tmp_x = after_change_x[i];
-    before_change_x[i] = *tmp_x;
+    tmp_x = after_change_x[i];
+    before_change_x[i] = tmp_x;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    *tmp_y = after_change_y[j];
-    before_change_y[j] = *tmp_y;
+    tmp_y = after_change_y[j];
+    before_change_y[j] = tmp_y;
   }
 }
 
