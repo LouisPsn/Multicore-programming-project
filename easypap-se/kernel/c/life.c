@@ -280,17 +280,10 @@ unsigned life_compute_omp (unsigned nb_iter)
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
 
-        if (check_change == 1) {
-          after_change_x[x/TILE_H] = 1;
-          after_change_y[y/TILE_W] = 1;
-        }
-        else {
-          after_change_x[x/TILE_H] = 0;
-          after_change_y[y/TILE_W] = 0;
-        }
+        after_change_x[x/TILE_H] = check_change;
+        after_change_y[y/TILE_W] = check_change;
       }
 
-    store_change();
 
     printf("\n");
     for (int i = 0; i < DIM/TILE_W; i++) {
