@@ -17,8 +17,8 @@ static cell_t *_table = NULL, *_alternate_table = NULL;
 static int before_change_x[DIM/TILE_W];
 static int before_change_y[DIM/TILE_H];
 
-int after_change_x[DIM/TILE_W];
-int after_change_y[DIM/TILE_H];
+static int after_change_x[DIM/TILE_W];
+static int after_change_y[DIM/TILE_H];
 
 
 void init_has_changed() {
