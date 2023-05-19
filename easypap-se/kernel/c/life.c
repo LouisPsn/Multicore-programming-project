@@ -14,36 +14,36 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static int before_change_x[DIM/TILE_W] = {0};
-static int before_change_y[DIM/TILE_H] = {0};
+static int before_change_x[DIM/TILE_W];
+static int before_change_y[DIM/TILE_H];
 
-int after_change_x[DIM/TILE_W] = {0};
-int after_change_y[DIM/TILE_H] = {0};
+int after_change_x[DIM/TILE_W];
+int after_change_y[DIM/TILE_H];
 
 
-// void init_has_changed() {
+void init_has_changed() {
 
-//   if (before_change_x == NULL) {
-//     before_change_x = malloc(sizeof(int)*DIM/TILE_W);
-//   }
-//   if (before_change_y == NULL) {
-//     before_change_y = malloc(sizeof(int)*DIM/TILE_H);
-//   }
-//   if (after_change_x == NULL) {
-//     after_change_x = malloc(sizeof(int)*DIM/TILE_W);
-//   }
-//   if (after_change_y == NULL) {
-//     after_change_y = malloc(sizeof(int)*DIM/TILE_H);
-//   }
-//   for (int i = 0; i < DIM/TILE_W; i++) {
-//     before_change_x[i] = 1;
-//     after_change_x[i] = 1;
-//   }
-//   for (int j = 0; j < DIM/TILE_H; j++) {
-//     before_change_y[j] = 1;
-//     after_change_y[j] = 1;
-//   }
-// }
+  // if (before_change_x == NULL) {
+  //   before_change_x = malloc(sizeof(int)*DIM/TILE_W);
+  // }
+  // if (before_change_y == NULL) {
+  //   before_change_y = malloc(sizeof(int)*DIM/TILE_H);
+  // }
+  // if (after_change_x == NULL) {
+  //   after_change_x = malloc(sizeof(int)*DIM/TILE_W);
+  // }
+  // if (after_change_y == NULL) {
+  //   after_change_y = malloc(sizeof(int)*DIM/TILE_H);
+  // }
+  for (int i = 0; i < DIM/TILE_W; i++) {
+    before_change_x[i] = 1;
+    after_change_x[i] = 1;
+  }
+  for (int j = 0; j < DIM/TILE_H; j++) {
+    before_change_y[j] = 1;
+    after_change_y[j] = 1;
+  }
+}
 
 void store_change() {
   for (int i = 0; i < DIM/TILE_W; i++) {
@@ -252,7 +252,7 @@ unsigned life_compute_tiled (unsigned nb_iter)
 //
 unsigned life_compute_omp (unsigned nb_iter)
 {
-  // init_has_changed();
+  init_has_changed();
 
   unsigned res = 0;
 
