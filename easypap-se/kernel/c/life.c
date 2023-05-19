@@ -215,7 +215,7 @@ unsigned life_compute_seq (unsigned nb_iter)
       return it;
 
     swap_tables ();
-    copy_changed();
+    store_change();
   }
 
   free_has_changed();
