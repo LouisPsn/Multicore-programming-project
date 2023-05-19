@@ -21,10 +21,10 @@ int *after_changed_x;
 int *after_changed_y;
 
 void init_has_changed() {
-  before_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
-  before_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
-  after_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
-  after_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
+  before_changed_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  before_changed_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  after_changed_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  after_changed_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   for (int i = 0; i < DIM/TILE_W; i++) {
     before_changed_x[i] = 1;
     after_changed_x[i] = 1;
@@ -45,10 +45,10 @@ void copy_changed() {
 }
 
 void free_has_changed() {
-  free(before_changed_x);
-  free(before_changed_y);
-  free(after_changed_x);
-  free(after_changed_y);
+  munmap(before_changed_x, sizeof(int)*DIM/TILE_W);
+  munmap(before_changed_y, sizeof(int)*DIM/TILE_W);
+  munmap(after_changed_x, sizeof(int)*DIM/TILE_W);
+  munmap(after_changed_y, sizeof(int)*DIM/TILE_W);
 }
 
 
@@ -254,7 +254,7 @@ unsigned life_compute_omp (unsigned nb_iter)
     
     unsigned change = 0;
 
-    #pragma omp parallel for collapse(2) schedule(static)
+    #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H)
       for (int x = 0; x < DIM; x += TILE_W)
         change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
