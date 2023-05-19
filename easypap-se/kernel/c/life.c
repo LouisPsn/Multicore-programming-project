@@ -205,13 +205,11 @@ int life_do_tile_sparse (int x, int y, int width, int height)
             change = 1;
           }
 
-          printf("%d", change);
-
           next_table(i, j) = me;
         }
       }
-      printf("\n");
     }
+    printf("%d\n", change);
   }
 
   return change;
