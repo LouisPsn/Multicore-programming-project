@@ -46,8 +46,8 @@ void init_has_changed() {
 }
 
 void store_change() {
-  int *tmp_x;
-  int *tmp_y;
+  int *tmp_x = 0;
+  int *tmp_y = 0;
   for (int i = 0; i < DIM/TILE_W; i++) {
     *tmp_x = after_change_x[i];
     before_change_x[i] = tmp_x;
