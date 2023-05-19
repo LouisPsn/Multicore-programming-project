@@ -300,6 +300,8 @@ unsigned life_compute_omp (unsigned nb_iter)
       res = it;
       break;
     }
+
+    #pragma omp barrier
     store_change();
   }
 
