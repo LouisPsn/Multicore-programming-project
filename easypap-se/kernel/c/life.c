@@ -53,7 +53,7 @@ void store_change() {
     before_change_x[i] = tmp_x;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    tmp_y = after_change_y[j];
+    tmp_y = (int)after_change_y[j];
     before_change_y[j] = tmp_y;
   }
 }
