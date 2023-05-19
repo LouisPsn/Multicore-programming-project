@@ -17,8 +17,8 @@ static cell_t *_table = NULL, *_alternate_table = NULL;
 static int *b_c_x = NULL;
 static int *b_c_y = NULL;
 
-static *a_c_x = NULL;
-static *a_c_y = NULL;
+static int *a_c_x = NULL;
+static int *a_c_y = NULL;
 
 static inline int *table_int (int *restrict i, int x)
 {
