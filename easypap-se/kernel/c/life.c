@@ -181,7 +181,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     }
   }
 
-  // if (change_neigh == 1) {
+  if (change_neigh == 0) {
     for (int i = y; i < y + height; i++) {
       for (int j = x; j < x + width; j++) {
         if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
@@ -208,7 +208,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
           next_table(i, j) = me;
         }
       }
-    // }
+    }
   }
 
   return change;
