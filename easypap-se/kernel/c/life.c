@@ -152,31 +152,49 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 {
   int change = 0;
 
+  int change_neigh = 0;
 
-  for (int i = y; i < y + height; i++) {
-    for (int j = x; j < x + width; j++) {
-      if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
-        
-        unsigned n  = 0;
-        unsigned me = cur_table (i, j);
+  int pos_x;
+  int pos_y;
 
-        for (int yloc = i - 1; yloc < i + 2; yloc++)
-          for (int xloc = j - 1; xloc < j + 2; xloc++)
-            if (xloc != j || yloc != i)
-              n += cur_table(yloc, xloc);
-
-        if (me == 1 && n != 2 && n != 3)
-        {
-          me = 0;
-          change = 1;
+  for (int i = -1; i <= 1; i++) {
+    for (int j = - 1; j <= 1; j++) {
+      pos_x = x/TILE_W + i;
+      pos_y = x/TILE_H + j;
+      if (pos_x >= 0 && pos_x < DIM/TILE_W && pos_y >= 0 && pos_y < DIM/TILE_H) {
+        if (before_change_x[pos_x] == 1 && before_change_y[pos_y] == 1) {
+          change_neigh = 1;
         }
-        else if (me == 0 && n == 3)
-        {
-          me = 1;
-          change = 1;
-        }
+      }
+    }
+  }
 
-        next_table(i, j) = me;
+  if (change_neigh == 1) {
+    for (int i = y; i < y + height; i++) {
+      for (int j = x; j < x + width; j++) {
+        if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
+          
+          unsigned n  = 0;
+          unsigned me = cur_table (i, j);
+
+          for (int yloc = i - 1; yloc < i + 2; yloc++)
+            for (int xloc = j - 1; xloc < j + 2; xloc++)
+              if (xloc != j || yloc != i)
+                n += cur_table(yloc, xloc);
+
+          if (me == 1 && n != 2 && n != 3)
+          {
+            me = 0;
+            change = 1;
+          }
+          else if (me == 0 && n == 3)
+          {
+            me = 1;
+            change = 1;
+          }
+
+          next_table(i, j) = me;
+        }
       }
     }
   }
@@ -238,6 +256,8 @@ unsigned life_compute_omp (unsigned nb_iter)
 
   unsigned res = 0;
 
+  int check_change = 0;
+
   for (unsigned it = 1; it <= nb_iter; it++) {
     
     unsigned change = 0;
@@ -245,7 +265,17 @@ unsigned life_compute_omp (unsigned nb_iter)
     #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H)
       for (int x = 0; x < DIM; x += TILE_W)
-        change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
+        check_change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
+        change |= check_change;
+
+        if (check_change == 1) {
+          after_change_x[x/TILE_H] = 1;
+          after_change_y[x/TILE_W] = 1;
+        }
+        else {
+          after_change_x[x/TILE_H] = 0;
+          after_change_y[x/TILE_W] = 0;
+        }
 
     swap_tables ();
 
