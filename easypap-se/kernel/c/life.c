@@ -261,6 +261,7 @@ unsigned life_compute_omp (unsigned nb_iter)
       for (int x = 0; x < DIM; x += TILE_W)
         change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
 
+    #pragma omp barrier
     swap_tables ();
     copy_changed();
 
@@ -268,7 +269,6 @@ unsigned life_compute_omp (unsigned nb_iter)
       res = it;
       break;
     }
-    
   }
 
   free_has_changed();
