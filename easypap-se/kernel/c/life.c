@@ -47,10 +47,10 @@ void init_has_changed() {
 
 void copy_changed() {
   for (int i = 0; i < DIM/TILE_W; i++) {
-    before_changed_x[i] = after_changed_x[i];
+    before_change_x[i] = after_change_x[i];
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_changed_y[j] = after_changed_y[j];
+    before_change_y[j] = after_change_y[j];
   }
 }
 
