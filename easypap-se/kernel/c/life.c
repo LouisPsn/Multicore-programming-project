@@ -205,9 +205,12 @@ int life_do_tile_sparse (int x, int y, int width, int height)
             change = 1;
           }
 
+          printf("%d", change);
+
           next_table(i, j) = me;
         }
       }
+      printf("\n");
     }
   }
 
@@ -275,24 +278,11 @@ unsigned life_compute_omp (unsigned nb_iter)
     unsigned change = 0;
 
     printf("\n");
-    // for (int i = 0; i < DIM/TILE_W; i++) {
-    //   for (int j = 0; j < DIM/TILE_H; j++) {
-    //     printf("%d", (after_change_x[i] == 1) && (after_change_y[j] == 1));
-    //   }
-    //   printf("\n");
-    // }
-    printf("\n");
-
-    printf("\n");
     #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H) {
       for (int x = 0; x < DIM; x += TILE_W) {
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
-
-        if (check_change == 1) {
-          printf("%d", check_change);
-        }
 
         after_change_x[x/TILE_H] = check_change;
         after_change_y[y/TILE_W] = check_change;
