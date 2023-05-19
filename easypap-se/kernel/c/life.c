@@ -21,7 +21,7 @@ int* init_has_changed() {
   for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
     has_changed[i] = 1;
   }
-  return has_changed
+  return has_changed;
 }
 
 void free_has_changed() {
@@ -210,7 +210,7 @@ unsigned life_compute_tiled (unsigned nb_iter)
 //
 unsigned life_compute_omp (unsigned nb_iter)
 {
-  init_has_changed(int height, int width)
+  init_has_changed(int height, int width);
 
   unsigned res = 0;
 
@@ -231,6 +231,8 @@ unsigned life_compute_omp (unsigned nb_iter)
       }
     
   }
+
+  free_has_changed();
 
   return res;
 }
