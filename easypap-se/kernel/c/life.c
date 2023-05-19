@@ -36,12 +36,12 @@ void init_has_changed() {
     after_change_y = malloc(DIM/TILE_H);
   }
   for (int i = 0; i < DIM/TILE_W; i++) {
-    before_changed_x[i] = 1;
-    after_changed_x[i] = 1;
+    before_change_x[i] = 1;
+    after_change_x[i] = 1;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_changed_y[j] = 1;
-    after_changed_y[j] = 1;
+    before_change_y[j] = 1;
+    after_change_y[j] = 1;
   }
 }
 
