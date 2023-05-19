@@ -289,7 +289,7 @@ unsigned life_compute_omp (unsigned nb_iter)
         after_change_y[y/TILE_W] = check_change;
       }
     }
-    printf("\n");
+    printf("\nIteration ended\n\n");
 
     store_change();
 
