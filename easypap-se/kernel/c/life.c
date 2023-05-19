@@ -14,51 +14,51 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static int *b_c_x = NULL;
-static int *b_c_y = NULL;
+static int *before_change_x = NULL;
+static int *before_change_y = NULL;
 
-static int *a_c_x = NULL;
-static int *a_c_y = NULL;
+static int *after_change_x = NULL;
+static int *after_change_y = NULL;
 
-static inline int *table_int (int *restrict i, int x)
-{
-  return i + x;
-}
-
-#define before_changed_x(x) (*table_int (b_c_x, (x)))
-#define before_changed_y(y) (*table_int (b_c_y, (y)))
-#define after_changed_x(x) (*table_int (a_c_x, (x)))
-#define after_changed_y(y) (*table_int (a_c_y, (y)))
 
 void init_has_changed() {
-  b_c_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  b_c_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  a_c_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  a_c_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+
+  if (before_change_x == NULL) {
+    before_change_x = malloc(DIM/TILE_W);
+  }
+  if (before_change_y == NULL) {
+    before_change_y = malloc(DIM/TILE_H);
+  }
+  if (after_change_x == NULL) {
+    after_change_x = malloc(DIM/TILE_W);
+  }
+  if (after_change_y == NULL) {
+    after_change_y = malloc(DIM/TILE_H);
+  }
   for (int i = 0; i < DIM/TILE_W; i++) {
-    before_changed_x(i) = 1;
-    after_changed_x(i) = 1;
+    before_changed_x[i] = 1;
+    after_changed_x[i] = 1;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_changed_y(j) = 1;
-    after_changed_y(j) = 1;
+    before_changed_y[j] = 1;
+    after_changed_y[j] = 1;
   }
 }
 
 void copy_changed() {
   for (int i = 0; i < DIM/TILE_W; i++) {
-    before_changed_x(i) = after_changed_x(i);
+    before_changed_x[i] = after_changed_x[i];
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_changed_y(j) = after_changed_y(j);
+    before_changed_y[j] = after_changed_y[j];
   }
 }
 
 void free_has_changed() {
-  munmap(b_c_x, sizeof(int)*DIM/TILE_W);
-  munmap(b_c_y, sizeof(int)*DIM/TILE_W);
-  munmap(a_c_x, sizeof(int)*DIM/TILE_W);
-  munmap(a_c_y, sizeof(int)*DIM/TILE_W);
+  free(before_change_x);
+  free(before_change_y);
+  free(after_change_x);
+  free(after_change_y);
 }
 
 
@@ -152,56 +152,34 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 {
   int change = 0;
 
-  int check_neigh = 0;
 
-  int pos_x;
-  int pos_y;
+  for (int i = y; i < y + height; i++) {
+    for (int j = x; j < x + width; j++) {
+      if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
+        
+        unsigned n  = 0;
+        unsigned me = cur_table (i, j);
 
-  for (int i = -1; i <= 1; i++) {
-    for (int j = -1; j <= 1; j++) {
-      pos_x = x/TILE_W + i;
-      pos_y = y/TILE_H + j;
-      if (pos_x >= 0 && pos_x < DIM/TILE_W && pos_y >= 0 && pos_y < DIM/TILE_H) {
-        if (before_changed_x(pos_x) == 1 && before_changed_y(pos_y) == 1) {
-          check_neigh = 1;
+        for (int yloc = i - 1; yloc < i + 2; yloc++)
+          for (int xloc = j - 1; xloc < j + 2; xloc++)
+            if (xloc != j || yloc != i)
+              n += cur_table(yloc, xloc);
+
+        if (me == 1 && n != 2 && n != 3)
+        {
+          me = 0;
+          change = 1;
         }
+        else if (me == 0 && n == 3)
+        {
+          me = 1;
+          change = 1;
+        }
+
+        next_table(i, j) = me;
       }
     }
   }
-
-
-  if (check_neigh == 1) {
-    for (int i = y; i < y + height; i++) {
-      for (int j = x; j < x + width; j++) {
-        if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
-          
-          unsigned n  = 0;
-          unsigned me = cur_table (i, j);
-
-          for (int yloc = i - 1; yloc < i + 2; yloc++)
-            for (int xloc = j - 1; xloc < j + 2; xloc++)
-              if (xloc != j || yloc != i)
-                n += cur_table(yloc, xloc);
-
-          if (me == 1 && n != 2 && n != 3)
-          {
-            me = 0;
-            change = 1;
-          }
-          else if (me == 0 && n == 3)
-          {
-            me = 1;
-            change = 1;
-          }
-
-          next_table(i, j) = me;
-        }
-      }
-    }
-  }
-
-  after_changed_x(x/TILE_W) = change;
-  after_changed_y(y/TILE_H) = change;
 
   return change;
 }
