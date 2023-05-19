@@ -24,20 +24,16 @@ static int *after_change_y = NULL;
 void init_has_changed() {
 
   if (before_change_x == NULL) {
-    printf("before_change_x initialised\n");
-    before_change_x = malloc(DIM/TILE_W);
+    before_change_x = malloc(sizeof(int)*DIM/TILE_W);
   }
   if (before_change_y == NULL) {
-    printf("before_change_y initialised\n");
-    before_change_y = malloc(DIM/TILE_H);
+    before_change_y = malloc(sizeof(int)*DIM/TILE_H);
   }
   if (after_change_x == NULL) {
-    printf("after_change_x initialised\n");
-    after_change_x = malloc(DIM/TILE_W);
+    after_change_x = malloc(sizeof(int)*DIM/TILE_W);
   }
   if (after_change_y == NULL) {
-    printf("after_change_y initialised\n");
-    after_change_y = malloc(DIM/TILE_H);
+    after_change_y = malloc(sizeof(int)*DIM/TILE_H);
   }
   for (int i = 0; i < DIM/TILE_W; i++) {
     before_change_x[i] = 1;
