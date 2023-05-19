@@ -14,45 +14,55 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-int *before_changed_x;
-int *before_changed_y;
+int *b_c_x;
+int *b_c_y;
 
-int *after_changed_x;
-int *after_changed_y;
+int *a_c_x;
+int *a_c_y;
+
+#define before_changed_x(x) (*int (b_c_x, (x)))
+#define before_changed_y(y) (*int (b_c_y, (y)))
+#define after_changed_x(x) (*int (a_c_x, (x)))
+#define after_changed_y(y) (*int (a_c_y, (y)))
 
 void init_has_changed() {
-  before_changed_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  before_changed_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  after_changed_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  after_changed_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  b_c_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  b_c_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  a_c_x = mmap(NULL, sizeof(int)*DIM/TILE_W, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  a_c_y = mmap(NULL, sizeof(int)*DIM/TILE_H, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   for (int i = 0; i < DIM/TILE_W; i++) {
-    before_changed_x[i] = 1;
-    after_changed_x[i] = 1;
+    before_changed_x(i) = 1;
+    after_changed_x(i) = 1;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_changed_y[j] = 1;
-    after_changed_y[j] = 1;
+    before_changed_y(j) = 1;
+    after_changed_y(j) = 1;
   }
 }
 
 void copy_changed() {
   for (int i = 0; i < DIM/TILE_W; i++) {
-    before_changed_x[i] = after_changed_x[i];
+    before_changed_x(i) = after_changed_x(i);
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_changed_y[j] = after_changed_y[j];
+    before_changed_y(j) = after_changed_y(j);
   }
 }
 
 void free_has_changed() {
-  munmap(before_changed_x, sizeof(int)*DIM/TILE_W);
-  munmap(before_changed_y, sizeof(int)*DIM/TILE_W);
-  munmap(after_changed_x, sizeof(int)*DIM/TILE_W);
-  munmap(after_changed_y, sizeof(int)*DIM/TILE_W);
+  munmap(b_c_x, sizeof(int)*DIM/TILE_W);
+  munmap(b_c_y, sizeof(int)*DIM/TILE_W);
+  munmap(a_c_x, sizeof(int)*DIM/TILE_W);
+  munmap(a_c_y, sizeof(int)*DIM/TILE_W);
 }
 
 
 static inline cell_t *table_cell (cell_t *restrict i, int y, int x)
+{
+  return i + y * DIM + x;
+}
+
+static inline int *table_int (int *restrict i, int x, int y)
 {
   return i + y * DIM + x;
 }
@@ -152,7 +162,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
       pos_x = x/TILE_W + i;
       pos_y = y/TILE_H + j;
       if (pos_x >= 0 && pos_x < DIM/TILE_W && pos_y >= 0 && pos_y < DIM/TILE_H) {
-        if (before_changed_x[pos_x] == 1 && before_changed_y[pos_y] == 1) {
+        if (before_changed_x(pos_x) == 1 && before_changed_y(pos_y) == 1) {
           check_neigh = 1;
         }
       }
@@ -190,8 +200,8 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     }
   }
 
-  after_changed_x[x/TILE_W] = change;
-  after_changed_y[y/TILE_H] = change;
+  after_changed_x(x/TILE_W) = change;
+  after_changed_y(y/TILE_H) = change;
 
   return change;
 }
