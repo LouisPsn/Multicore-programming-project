@@ -59,16 +59,16 @@ void store_change() {
 }
 
 void free_has_changed() {
-  if (before_change_x) {
+  if (before_change_x != NULL) {
     free(before_change_x);
   }
-  if (before_change_y) {
+  if (before_change_y != NULL) {
     free(before_change_y);
   }
-  if (after_change_x) {
+  if (after_change_x != NULL) {
     free(after_change_x);
   }
-  if (after_change_y) {
+  if (after_change_y != NULL) {
     free(after_change_y);
   }
 }
@@ -173,15 +173,15 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     for (int j = - 1; j <= 1; j++) {
       pos_x = x/TILE_W + i;
       pos_y = x/TILE_H + j;
-      if (pos_x >= 0 && pos_x < DIM/TILE_W && pos_y >= 0 && pos_y < DIM/TILE_H) {
-        if (before_change_x[pos_x] == 1 && before_change_y[pos_y] == 1) {
+      if ((pos_x >= 0) && (pos_x < DIM/TILE_W) && (pos_y >= 0) && (pos_y < DIM/TILE_H)) {
+        if ((before_change_x[pos_x] == 1) && (before_change_y[pos_y] == 1)) {
           change_neigh = 1;
         }
       }
     }
   }
 
-  if (change_neigh == 1) {
+  // if (change_neigh == 1) {
     for (int i = y; i < y + height; i++) {
       for (int j = x; j < x + width; j++) {
         if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
@@ -208,7 +208,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
           next_table(i, j) = me;
         }
       }
-    }
+    // }
   }
 
   return change;
