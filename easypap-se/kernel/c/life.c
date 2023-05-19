@@ -20,7 +20,7 @@ int *b_c_y;
 int *a_c_x;
 int *a_c_y;
 
-static inline int *table_int (int *restrict i, int x, int y)
+static inline int *table_int (int *restrict i, int x)
 {
   return i + y * DIM + x;
 }
