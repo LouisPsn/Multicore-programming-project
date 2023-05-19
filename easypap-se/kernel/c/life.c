@@ -21,29 +21,29 @@ int after_change_x[DIM/TILE_W] = {0};
 int after_change_y[DIM/TILE_H] = {0};
 
 
-void init_has_changed() {
+// void init_has_changed() {
 
-  if (before_change_x == NULL) {
-    before_change_x = malloc(sizeof(int)*DIM/TILE_W);
-  }
-  if (before_change_y == NULL) {
-    before_change_y = malloc(sizeof(int)*DIM/TILE_H);
-  }
-  if (after_change_x == NULL) {
-    after_change_x = malloc(sizeof(int)*DIM/TILE_W);
-  }
-  if (after_change_y == NULL) {
-    after_change_y = malloc(sizeof(int)*DIM/TILE_H);
-  }
-  for (int i = 0; i < DIM/TILE_W; i++) {
-    before_change_x[i] = 1;
-    after_change_x[i] = 1;
-  }
-  for (int j = 0; j < DIM/TILE_H; j++) {
-    before_change_y[j] = 1;
-    after_change_y[j] = 1;
-  }
-}
+//   if (before_change_x == NULL) {
+//     before_change_x = malloc(sizeof(int)*DIM/TILE_W);
+//   }
+//   if (before_change_y == NULL) {
+//     before_change_y = malloc(sizeof(int)*DIM/TILE_H);
+//   }
+//   if (after_change_x == NULL) {
+//     after_change_x = malloc(sizeof(int)*DIM/TILE_W);
+//   }
+//   if (after_change_y == NULL) {
+//     after_change_y = malloc(sizeof(int)*DIM/TILE_H);
+//   }
+//   for (int i = 0; i < DIM/TILE_W; i++) {
+//     before_change_x[i] = 1;
+//     after_change_x[i] = 1;
+//   }
+//   for (int j = 0; j < DIM/TILE_H; j++) {
+//     before_change_y[j] = 1;
+//     after_change_y[j] = 1;
+//   }
+// }
 
 void store_change() {
   for (int i = 0; i < DIM/TILE_W; i++) {
@@ -54,12 +54,12 @@ void store_change() {
   }
 }
 
-void free_has_changed() {
-  free(before_change_x);
-  free(before_change_y);
-  free(after_change_x);
-  free(after_change_y);
-}
+// void free_has_changed() {
+//   free(before_change_x);
+//   free(before_change_y);
+//   free(after_change_x);
+//   free(after_change_y);
+// }
 
 
 static inline cell_t *table_cell (cell_t *restrict i, int y, int x)
