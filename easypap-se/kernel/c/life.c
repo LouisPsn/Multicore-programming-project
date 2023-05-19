@@ -14,6 +14,21 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
+int* has_changed;
+
+int* init_has_changed() {
+  has_changed = malloc(sizeof(int)*(DIM/TILE_W)*(DIM/TILE_H));
+  for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
+    has_changed[i] = 1;
+  }
+  return has_changed
+}
+
+void free_has_changed() {
+  free(has_changed);
+}
+
+
 static inline cell_t *table_cell (cell_t *restrict i, int y, int x)
 {
   return i + y * DIM + x;
@@ -99,6 +114,56 @@ int life_do_tile_default (int x, int y, int width, int height)
   return change;
 }
 
+///////////////////////////// Default tiling
+int life_do_tile_sparse (int x, int y, int width, int height)
+{
+  int change = 0;
+  int check_neigh = 0;
+
+  for (int i = -1; i <= 1; i++) {
+    for (int j = -1; j <= 1; j++) {
+      if (has_changed[x/TILE_W + i + (y/TILE_H + j)*(DIM/TILE_H)] == 1) {
+        check_neigh = 1;
+      }
+    }
+  }
+
+
+  if (check_neigh == 1) {
+    for (int i = y; i < y + height; i++) {
+      for (int j = x; j < x + width; j++) {
+        if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
+          
+          unsigned n  = 0;
+          unsigned me = cur_table (i, j);
+
+          for (int yloc = i - 1; yloc < i + 2; yloc++)
+            for (int xloc = j - 1; xloc < j + 2; xloc++)
+              if (xloc != j || yloc != i)
+                n += cur_table(yloc, xloc);
+
+          if (me == 1 && n != 2 && n != 3)
+          {
+            me = 0;
+            change = 1;
+          }
+          else if (me == 0 && n == 3)
+          {
+            me = 1;
+            change = 1;
+          }
+
+          next_table(i, j) = me;
+        }
+      }
+    }
+  }
+
+  has_changed[x/TILE_W + y/TILE_H*(DIM/TILE_H)] = change;
+
+  return change;
+}
+
 ///////////////////////////// Sequential version (seq)
 //
 unsigned life_compute_seq (unsigned nb_iter)
@@ -145,6 +210,8 @@ unsigned life_compute_tiled (unsigned nb_iter)
 //
 unsigned life_compute_omp (unsigned nb_iter)
 {
+  init_has_changed(int height, int width)
+
   unsigned res = 0;
 
   for (unsigned it = 1; it <= nb_iter; it++) {
