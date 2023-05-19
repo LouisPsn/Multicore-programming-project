@@ -275,6 +275,15 @@ unsigned life_compute_omp (unsigned nb_iter)
     unsigned change = 0;
 
     printf("\n");
+    for (int i = 0; i < DIM/TILE_W; i++) {
+      for (int j = 0; j < DIM/TILE_H; j++) {
+        printf("%d", after_change_x[i] && after_change_y[j]);
+      }
+      printf("\n");
+    }
+    printf("\n");
+
+    printf("\n");
     #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H) {
       for (int x = 0; x < DIM; x += TILE_W) {
@@ -287,15 +296,6 @@ unsigned life_compute_omp (unsigned nb_iter)
     }
 
     store_change();
-
-    printf("\n");
-    for (int i = 0; i < DIM/TILE_W; i++) {
-      for (int j = 0; j < DIM/TILE_H; j++) {
-        printf("%d", after_change_x[i] && after_change_y[j]);
-      }
-      printf("\n");
-    }
-    printf("\n");
 
     swap_tables ();
 
