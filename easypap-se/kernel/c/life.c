@@ -20,8 +20,6 @@ int *before_changed_y;
 int *after_changed_x;
 int *after_changed_y;
 
-#pragma omp threadprivate(before_changed_x, before_changed_y, after_changed_x, after_changed_y)
-
 void init_has_changed() {
   before_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
   before_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
