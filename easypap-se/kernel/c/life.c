@@ -50,7 +50,7 @@ void store_change() {
     before_change_x[i] = 1;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    before_change_y[j] = 1
+    before_change_y[j] = 1;
   }
 }
 
