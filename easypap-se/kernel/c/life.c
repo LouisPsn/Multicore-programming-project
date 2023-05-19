@@ -20,6 +20,11 @@ int *b_c_y;
 int *a_c_x;
 int *a_c_y;
 
+static inline int *table_int (int *restrict i, int x, int y)
+{
+  return i + y * DIM + x;
+}
+
 #define before_changed_x(x) (*table_int (b_c_x, (x)))
 #define before_changed_y(y) (*table_int (b_c_y, (y)))
 #define after_changed_x(x) (*table_int (a_c_x, (x)))
@@ -58,11 +63,6 @@ void free_has_changed() {
 
 
 static inline cell_t *table_cell (cell_t *restrict i, int y, int x)
-{
-  return i + y * DIM + x;
-}
-
-static inline int *table_int (int *restrict i, int x, int y)
 {
   return i + y * DIM + x;
 }
