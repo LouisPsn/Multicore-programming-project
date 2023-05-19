@@ -24,7 +24,7 @@ void init_has_changed() {
     has_changed_x[i] = 1;
   }
   for (int j = 0; j < DIM/TILE_H; j++) {
-    has_changed_y[i] = 1;
+    has_changed_y[j] = 1;
   }
 }
 
