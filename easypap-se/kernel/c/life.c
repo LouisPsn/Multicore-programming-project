@@ -292,14 +292,14 @@ unsigned life_compute_omp (unsigned nb_iter)
 
     store_change();
 
-    print("\n");
+    printf("\n");
     for (int i = 0; i < DIM/TILE_W; i++) {
       for (int j = 0; j < DIM/TILE_H; j++) {
         printf("%d ", before_change_x[i] && before_change[j]);
       }
-      print("\n");
+      printf("\n");
     }
-    print("\n");
+    printf("\n");
 
     swap_tables ();
 
