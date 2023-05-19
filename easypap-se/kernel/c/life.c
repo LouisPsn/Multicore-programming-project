@@ -14,11 +14,11 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static int *before_changed_x;
-static int *before_changed_y;
+int *before_changed_x;
+int *before_changed_y;
 
-static int *after_changed_x;
-static int *after_changed_y;
+int *after_changed_x;
+int *after_changed_y;
 
 void init_has_changed() {
   before_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
