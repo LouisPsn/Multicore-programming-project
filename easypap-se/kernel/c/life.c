@@ -14,18 +14,21 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-int* has_changed;
+int *has_changed_x;
+int *has_changed_y;
 
-int* init_has_changed() {
-  has_changed = malloc(sizeof(int)*(DIM/TILE_W)*(DIM/TILE_H));
+void init_has_changed() {
+  has_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
+  has_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
   for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
-    has_changed[i] = 1;
+    has_changed_x[i] = 1;
+    has_changed_y[i] = 1;
   }
-  return has_changed;
 }
 
 void free_has_changed() {
-  free(has_changed);
+  free(has_changed_x);
+  free(has_changed_y);
 }
 
 
@@ -122,12 +125,8 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 
   for (int i = -1; i <= 1; i++) {
     for (int j = -1; j <= 1; j++) {
-      int pos = x/TILE_W + i + (y/TILE_H + j)*(DIM/TILE_H);
-        if (pos > 0 && pos < DIM/TILE_W + (DIM/TILE_H)*(DIM/TILE_H)) {
-          if (has_changed[pos] == 1) {
-            check_neigh = 1;
-            printf("pos : (%d, %d)\n", x/TILE_W, y/TILE_H);
-        }
+      if (has_changed_x[x/TILE_W + i] == 1 && has_changed_y[y/TILE_H + i] == 1) {
+          check_neigh = 1;
       }
     }
   }
@@ -163,7 +162,8 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     }
   }
 
-  has_changed[x/TILE_W + y/TILE_H*(DIM/TILE_H)] = change;
+  has_changed_x[x/TILE_W] = change;
+  has_changed_y[y/TILE_W] = change;
 
   return change;
 }
