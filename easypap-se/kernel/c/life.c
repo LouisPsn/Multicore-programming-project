@@ -45,7 +45,7 @@ void init_has_changed() {
   }
 }
 
-void copy_changed() {
+void store_change() {
   for (int i = 0; i < DIM/TILE_W; i++) {
     before_change_x[i] = after_change_x[i];
   }
@@ -278,6 +278,7 @@ unsigned life_compute_omp (unsigned nb_iter)
         }
       }
 
+    store_change();
     swap_tables ();
 
     if (!change) { // we stop if all cells are stable
