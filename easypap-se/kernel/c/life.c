@@ -275,7 +275,7 @@ unsigned life_compute_omp (unsigned nb_iter)
     unsigned change = 0;
 
     printf("\n");
-    #pragma omp parallel for collapse(2) schedule(dynamic)
+    #pragma omp parallel for schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H) {
       for (int x = 0; x < DIM; x += TILE_W) {
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
