@@ -277,7 +277,7 @@ unsigned life_compute_omp (unsigned nb_iter)
     printf("\n");
     for (int i = 0; i < DIM/TILE_W; i++) {
       for (int j = 0; j < DIM/TILE_H; j++) {
-        printf("%d", after_change_x[i] && after_change_y[j]);
+        printf("%d", (after_change_x[i] == 1) && (after_change_y[j] == 1));
       }
       printf("\n");
     }
