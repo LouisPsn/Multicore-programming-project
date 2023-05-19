@@ -20,8 +20,10 @@ int *has_changed_y;
 void init_has_changed() {
   has_changed_x = malloc(sizeof(int)*(DIM/TILE_W));
   has_changed_y = malloc(sizeof(int)*(DIM/TILE_H));
-  for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
+  for (int i = 0; i < DIM/TILE_W; i++) {
     has_changed_x[i] = 1;
+  }
+  for (int j = 0; j < DIM/TILE_H; i++) {
     has_changed_y[i] = 1;
   }
 }
