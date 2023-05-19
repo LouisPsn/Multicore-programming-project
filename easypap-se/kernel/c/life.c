@@ -123,13 +123,14 @@ int life_do_tile_default (int x, int y, int width, int height)
 int life_do_tile_sparse (int x, int y, int width, int height)
 {
   int change = 0;
+
   int check_neigh = 0;
 
   for (int i = -1; i <= 1; i++) {
     for (int j = -1; j <= 1; j++) {
       int pos_x = x/TILE_W + i;
       int pos_y = y/TILE_H + j;
-      if (pos_x > 0 && pos_x < DIM/TILE_W && pos_y > 0 && pos_y < DIM/TILE_H) {
+      if (pos_x >= 0 && pos_x < DIM/TILE_W && pos_y >= 0 && pos_y < DIM/TILE_H) {
         if (has_changed_x[pos_x] == 1 && has_changed_y[pos_y] == 1) {
           check_neigh = 1;
         }
@@ -220,7 +221,7 @@ unsigned life_compute_tiled (unsigned nb_iter)
 //
 unsigned life_compute_omp (unsigned nb_iter)
 {
-  init_has_changed(DIM/TILE_W, DIM/TILE_H);
+  init_has_changed();
 
   unsigned res = 0;
 
