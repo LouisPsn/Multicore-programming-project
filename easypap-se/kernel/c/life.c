@@ -284,6 +284,7 @@ unsigned life_compute_omp (unsigned nb_iter)
         after_change_y[y/TILE_W] = check_change;
       }
 
+    store_change();
 
     printf("\n");
     for (int i = 0; i < DIM/TILE_W; i++) {
@@ -302,7 +303,6 @@ unsigned life_compute_omp (unsigned nb_iter)
     }
 
     #pragma omp barrier
-    store_change();
   }
 
   free_has_changed();
