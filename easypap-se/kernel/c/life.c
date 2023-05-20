@@ -261,7 +261,6 @@ int life_do_tile_AVX2 (int x, int y, int width, int height)
 //
 unsigned life_compute_seq (unsigned nb_iter)
 {
-  // init_has_changed();
   for (unsigned it = 1; it <= nb_iter; it++) {
 
     int change = do_tile (0, 0, DIM, DIM, 0);
@@ -270,10 +269,8 @@ unsigned life_compute_seq (unsigned nb_iter)
       return it;
 
     swap_tables ();
-    store_change();
   }
 
-  // free_has_changed();
 
   return 0;
 }
