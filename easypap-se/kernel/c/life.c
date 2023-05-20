@@ -26,7 +26,7 @@ void init_has_changed() {
   if (before_change == NULL) {
     before_change = malloc(sizeof(char)*(DIM/TILE_W)*(DIM/TILE_H));
   }
-  // if (before_change_y == NULL) {
+  // if (before_change_y == NULL) {after_change[i];
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
   // if (after_change == NULL) {
@@ -308,7 +308,7 @@ unsigned life_compute_omp (unsigned nb_iter)
 
   unsigned res = 0;
 
-  int check_change = 0;
+  char check_change = 0;
 
   for (unsigned it = 1; it <= nb_iter; it++) {
     
@@ -323,13 +323,13 @@ unsigned life_compute_omp (unsigned nb_iter)
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
 
-        after_change[x/TILE_W + (y/TILE_H)*TILE_W] = (char) check_change;
+        after_change[x/TILE_W + (y/TILE_H)*TILE_W] = check_change;
         // after_change_y[y/TILE_W] = check_change;
       }
     }
     // printf("\nIteration ended\n\n");
 
-    #pragma omp barrier
+    // #pragma omp barrier
     store_change(after_change);
 
     free(after_change);
