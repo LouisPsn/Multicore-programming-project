@@ -50,8 +50,8 @@ void store_change(char* after_change) {
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
   for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
-    tmp = after_change[i];
-    before_change[i] = tmp;
+    // tmp = 
+    before_change[i] = after_change[i];
   }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   tmp_y = after_change_y[j];
@@ -320,7 +320,6 @@ unsigned life_compute_omp (unsigned nb_iter)
     #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H) {
       for (int x = 0; x < DIM; x += TILE_W) {
-        after_change[x/TILE_W + y/TILE_H*TILE_W] = 1;
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
 
