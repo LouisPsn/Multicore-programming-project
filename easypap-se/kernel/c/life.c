@@ -172,11 +172,12 @@ int life_do_tile_sparse (int x, int y, int width, int height)
   int change_neigh = 0;
 
   int i = x/TILE_W;
-  int j = y/TILE_H;
 
-  long pos = i + j*TILE_W;
+  if (i < 180 || pos > 208) {
+    int j = y/TILE_H;
 
-  if (pos < 72000 || pos > 78000) {
+    long pos = i + j*TILE_W;
+    
     long pos_1 = i + 1 + j*TILE_W;
     long pos_2 = i - 1 + j*TILE_W;
     long pos_3 = i + (j + 1)*TILE_W;
