@@ -35,7 +35,7 @@ void init_has_changed() {
   // if (after_change_y == NULL) {
   //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
-  for (long i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
+  for (long i = 0; i < (long)((DIM/TILE_W)*(DIM/TILE_H)); i++) {
     before_change[i] = 1;
     // after_change[i] = 1;
   }
@@ -49,7 +49,7 @@ void store_change(int* after_change) {
   // char tmp = 0;
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
-  for (long i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
+  for (long i = 0; i < (long)((DIM/TILE_W)*(DIM/TILE_H)); i++) {
     if(after_change[i] == 1) {
        before_change[i] = 1;
     }
