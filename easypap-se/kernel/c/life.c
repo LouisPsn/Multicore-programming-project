@@ -338,7 +338,7 @@ unsigned life_compute_omp (unsigned nb_iter)
       break;
     }
 
-    // #pragma omp barrier
+    #pragma omp barrier
   }
 
   free_has_changed();
