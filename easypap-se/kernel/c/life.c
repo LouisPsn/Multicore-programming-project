@@ -24,7 +24,7 @@ static char *before_change;
 void init_has_changed() {
 
   if (before_change == NULL) {
-    before_change = malloc(sizeof(char)*(DIM/TILE_W)*(DIM/TILE_H) + 1);
+    before_change = malloc(sizeof(char)*(DIM/TILE_W)*(DIM/TILE_H) + TILE_H*TILE_W);
   }
   // if (before_change_y == NULL) {after_change[i];
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
@@ -178,7 +178,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
   int pos_1 = i + 1 + j*TILE_W;
   int pos_2 = i - 1 + j*TILE_W;
   int pos_3 = i + (j + 1)*TILE_W;
-  int pos_4 = i + (j - 1)*TILE_W;
+  int pos_4 = i + (j - 1)*TILE_W; 
   
   if (pos >= 0 && pos < (DIM/TILE_W)*(DIM/TILE_H)) {
     if (before_change[pos] == 1) {
