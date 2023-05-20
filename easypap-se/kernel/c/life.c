@@ -24,7 +24,7 @@ static char *before_change;
 void init_has_changed() {
 
   if (before_change == NULL) {
-    before_change = malloc(sizeof(char)*(DIM/TILE_W)*(DIM/TILE_H) + TILE_H*TILE_W);
+    before_change = malloc(sizeof(char)*(DIM/TILE_W)*(DIM/TILE_H) + 10*TILE_H*TILE_W);
   }
   // if (before_change_y == NULL) {after_change[i];
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
