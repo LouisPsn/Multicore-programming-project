@@ -14,23 +14,23 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static int *before_change;
+static char *before_change;
 // static int *before_change_y;
 
-static int *after_change;
+static char *after_change;
 // static int *after_change_y;
 
 
 void init_has_changed() {
 
   if (before_change == NULL) {
-    before_change = malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
+    before_change = malloc(sizeof(char)*DIM/TILE_W*DIM/TILE_H);
   }
   // if (before_change_y == NULL) {
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
   if (after_change == NULL) {
-    after_change = malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
+    after_change = malloc(sizeof(char)*DIM/TILE_W*DIM/TILE_H);
   }
   // if (after_change_y == NULL) {
   //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
@@ -46,12 +46,13 @@ void init_has_changed() {
 }
 
 void store_change() {
-  int tmp = 0;
+  // int tmp = 0;
   // int tmp_y = 0;
-  for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
-    tmp = *after_change[i];
-    before_change[i] = tmp;
-  }
+  strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
+  // for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
+  //   tmp = after_change[i];
+  //   before_change[i] = tmp;
+  // }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   tmp_y = after_change_y[j];
   //   before_change_y[j] = tmp_y;
