@@ -51,7 +51,7 @@ void store_change(char* after_change) {
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
   for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
     if(after_change[i] == 1) {
-      before_change[i] = 1;
+       before_change[i] = 1;
     }
     else {
       before_change[i] = 0;
@@ -184,7 +184,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
         }
       }
     }
-  }
+  // }
 
   // printf("%d", change_neigh);
 
