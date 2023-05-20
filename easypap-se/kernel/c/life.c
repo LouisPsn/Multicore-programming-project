@@ -46,12 +46,16 @@ void init_has_changed() {
 }
 
 void store_change(char* after_change) {
-  char tmp = 0;
+  // char tmp = 0;
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
   for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
-    tmp = after_change[i];
-    before_change[i] = tmp;
+    if(after_change[i] == 1) {
+      before_change[i] = 1;
+    }
+    else {
+      before_change[i] = 0;
+    }
   }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   tmp_y = after_change_y[j];
@@ -165,16 +169,16 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 {
   int change = 0;
 
-  int change_neigh = 1;
+  int change_neigh = 0;
 
-  unsigned int pos = 0;
+  int pos = 0;
   // int pos_y;
 
-  for (unsigned int i = 0; i <= 2; i++) {
-    for (unsigned j = 0; j <= 2; j++) {
-      unsigned pos = x/TILE_W + i - 1 + (y/TILE_H + j - 1)*TILE_W;
+  for (int i = -1; i <= 1; i++) {
+    for (int j = -1; j <= 1; j++) {
+      pos = x/TILE_W + i + (y/TILE_H + j)*TILE_W;
       // pos_y = y/TILE_H + j;
-      if ((pos >= 0) && (pos < (DIM/TILE_W)*(DIM/TILE_H))) {
+      // if ((pos >= 0) && (pos < (DIM/TILE_W)*(DIM/TILE_H))) {
         if ((before_change[pos] == 1)) {
           change_neigh = 1;
         }
