@@ -46,7 +46,7 @@ void init_has_changed() {
 }
 
 void store_change() {
-  int *tmp = 0;
+  char *tmp = 0;
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
   for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
