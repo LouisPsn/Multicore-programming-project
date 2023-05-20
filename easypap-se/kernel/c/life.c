@@ -178,6 +178,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
   int pos_4 = x/TILE_W + (y/TILE_H - 1)*TILE_W;
   
   if (pos >= 0 && pos < DIM/TILE_W*DIM/TILE_H) {
+    printf("1");
     if (before_change[pos] == 1) {
       change_neigh = 1;
     }
@@ -348,8 +349,9 @@ unsigned life_compute_omp (unsigned nb_iter)
     }
     // printf("\nIteration ended\n\n");
 
-    // #pragma omp barrier
+    #pragma omp barrier
     store_change(after_change);
+    printf("\n\n");
 
     free(after_change);
 
