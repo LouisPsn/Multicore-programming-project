@@ -17,7 +17,7 @@ static cell_t *_table = NULL, *_alternate_table = NULL;
 static char *before_change;
 // static int *before_change_y;
 
-static char *after_change;
+// static char *after_change;
 // static int *after_change_y;
 
 
@@ -29,15 +29,15 @@ void init_has_changed() {
   // if (before_change_y == NULL) {
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
-  if (after_change == NULL) {
-    after_change = malloc(sizeof(char)*DIM/TILE_W*DIM/TILE_H);
-  }
+  // if (after_change == NULL) {
+  //   after_change = malloc(sizeof(char)*DIM/TILE_W*DIM/TILE_H);
+  // }
   // if (after_change_y == NULL) {
   //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
   for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
     before_change[i] = 1;
-    after_change[i] = 1;
+    // after_change[i] = 1;
   }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   before_change_y[j] = 1;
@@ -45,7 +45,7 @@ void init_has_changed() {
   // }
 }
 
-void store_change() {
+void store_change(char* after_change) {
   char tmp = 0;
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
@@ -66,9 +66,9 @@ void free_has_changed() {
   // if (before_change_y != NULL) {
   //   free(before_change_y);
   // }
-  if (after_change != NULL) {
-    free(after_change);
-  }
+  // if (after_change != NULL) {
+  //   free(after_change);
+  // }
   // if (after_change_y != NULL) {
   //   free(after_change_y);
   // }
@@ -317,6 +317,8 @@ unsigned life_compute_omp (unsigned nb_iter)
     
     unsigned change = 0;
 
+    char *after_change = malloc(sizeof(char)*DIM/TILE_W*DIM/TILE_H);
+
     // printf("\n");
     #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H) {
@@ -331,7 +333,9 @@ unsigned life_compute_omp (unsigned nb_iter)
     // printf("\nIteration ended\n\n");
 
     #pragma omp barrier
-    store_change();
+    store_change(after_change);
+
+    free(after_change);
 
     swap_tables ();
 
