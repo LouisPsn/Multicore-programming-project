@@ -30,7 +30,7 @@ void init_has_changed() {
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
   if (after_change == NULL) {
-    after_change = (int*)malloc(sizeof(int)*DIM/TILE_W**DIM/TILE_H);
+    after_change = (int*)malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
   }
   // if (after_change_y == NULL) {
   //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
@@ -173,7 +173,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     for (int j = - 1; j <= 1; j++) {
       pos = x/TILE_W + i + (y/TILE_H + j)*TILE_H;
       // pos_y = y/TILE_H + j;
-      if ((pos >= 0) && (pos_x < DIM/TILE_W*DIM*TILE_H)) {
+      if ((pos >= 0) && (pos < DIM/TILE_W*DIM*TILE_H)) {
         if ((before_change[pos] == 1)) {
           change_neigh = 1;
         }
