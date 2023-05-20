@@ -165,7 +165,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 {
   int change = 0;
 
-  int change_neigh = 0;
+  int change_neigh = 1;
 
   unsigned int pos = 0;
   // int pos_y;
