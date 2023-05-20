@@ -50,8 +50,8 @@ void store_change() {
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
   for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
-    tmp = after_change[i];
-    before_change[i] = tmp;
+    tmp = (char) after_change[i];
+    before_change[i] = (char) tmp;
   }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   tmp_y = after_change_y[j];
