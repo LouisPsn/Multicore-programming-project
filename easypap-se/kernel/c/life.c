@@ -50,8 +50,8 @@ void store_change(char* after_change) {
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
   for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
-    // tmp = 
-    before_change[i] = after_change[i];
+    tmp = after_change[i];
+    before_change[i] = tmp;
   }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   tmp_y = after_change_y[j];
@@ -171,10 +171,10 @@ int life_do_tile_sparse (int x, int y, int width, int height)
   // int pos_y;
 
   for (int i = -1; i <= 1; i++) {
-    for (int j = - 1; j <= 1; j++) {
+    for (int j = -1; j <= 1; j++) {
       pos = x/TILE_W + i + (y/TILE_H + j)*TILE_W;
       // pos_y = y/TILE_H + j;
-      if ((pos >= 0) && (pos < (DIM/TILE_W)*(DIM*TILE_H))) {
+      if ((pos >= 0) && (pos < (DIM/TILE_W)*(DIM/TILE_H))) {
         if ((before_change[pos] == 1)) {
           change_neigh = 1;
         }
@@ -323,7 +323,7 @@ unsigned life_compute_omp (unsigned nb_iter)
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
 
-        after_change[x/TILE_W + y/TILE_H*TILE_W] = (char) check_change;
+        after_change[x/TILE_W + (y/TILE_H)*TILE_W] = (char) check_change;
         // after_change_y[y/TILE_W] = check_change;
       }
     }
