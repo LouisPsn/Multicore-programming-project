@@ -181,6 +181,8 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     }
   }
 
+  printf("%d", change_neigh);
+
   if (change_neigh == 1) {
     for (int i = y; i < y + height; i++) {
       for (int j = x; j < x + width; j++) {
@@ -217,6 +219,42 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 
   return change;
 }
+
+
+///////////////////////////// Tiling with AVX2 vectorisation
+int life_do_tile_AVX2 (int x, int y, int width, int height)
+{
+  int change = 0;
+
+  for (int i = y; i < y + height; i++)
+    for (int j = x; j < x + width; j++)
+      if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
+
+        unsigned n  = 0;
+        unsigned me = cur_table (i, j);
+
+        for (int yloc = i - 1; yloc < i + 2; yloc++)
+          for (int xloc = j - 1; xloc < j + 2; xloc++)
+            if (xloc != j || yloc != i)
+              n += cur_table(yloc, xloc);
+
+        if (me == 1 && n != 2 && n != 3)
+        {
+          me = 0;
+          change = 1;
+        }
+        else if (me == 0 && n == 3)
+        {
+          me = 1;
+          change = 1;
+        }
+
+        next_table(i, j) = me;
+      }
+
+  return change;
+}
+
 
 ///////////////////////////// Sequential version (seq)
 //
