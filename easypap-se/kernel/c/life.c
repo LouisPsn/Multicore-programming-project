@@ -14,63 +14,63 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static int *before_change_x;
-static int *before_change_y;
+static int *before_change;
+// static int *before_change_y;
 
-static int *after_change_x;
-static int *after_change_y;
+static int *after_change;
+// static int *after_change_y;
 
 
 void init_has_changed() {
 
-  if (before_change_x == NULL) {
-    before_change_x = (int*)malloc(sizeof(int)*DIM/TILE_W);
+  if (before_change == NULL) {
+    before_change = (int*)malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
   }
-  if (before_change_y == NULL) {
-    before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
+  // if (before_change_y == NULL) {
+  //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
+  // }
+  if (after_change == NULL) {
+    after_change = (int*)malloc(sizeof(int)*DIM/TILE_W**DIM/TILE_H);
   }
-  if (after_change_x == NULL) {
-    after_change_x = (int*)malloc(sizeof(int)*DIM/TILE_W);
+  // if (after_change_y == NULL) {
+  //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
+  // }
+  for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
+    before_change[i] = 1;
+    after_change[i] = 1;
   }
-  if (after_change_y == NULL) {
-    after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
-  }
-  for (int i = 0; i < DIM/TILE_W; i++) {
-    before_change_x[i] = 1;
-    after_change_x[i] = 1;
-  }
-  for (int j = 0; j < DIM/TILE_H; j++) {
-    before_change_y[j] = 1;
-    after_change_y[j] = 1;
-  }
+  // for (int j = 0; j < DIM/TILE_H; j++) {
+  //   before_change_y[j] = 1;
+  //   after_change_y[j] = 1;
+  // }
 }
 
 void store_change() {
-  int tmp_x = 0;
-  int tmp_y = 0;
-  for (int i = 0; i < DIM/TILE_W; i++) {
-    tmp_x = after_change_x[i];
-    before_change_x[i] = tmp_x;
+  int tmp = 0;
+  // int tmp_y = 0;
+  for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
+    tmp = after_change[i];
+    before_change[i] = tmp;
   }
-  for (int j = 0; j < DIM/TILE_H; j++) {
-    tmp_y = after_change_y[j];
-    before_change_y[j] = tmp_y;
-  }
+  // for (int j = 0; j < DIM/TILE_H; j++) {
+  //   tmp_y = after_change_y[j];
+  //   before_change_y[j] = tmp_y;
+  // }
 }
 
 void free_has_changed() {
-  if (before_change_x != NULL) {
-    free(before_change_x);
+  if (before_change != NULL) {
+    free(before_change);
   }
-  if (before_change_y != NULL) {
-    free(before_change_y);
+  // if (before_change_y != NULL) {
+  //   free(before_change_y);
+  // }
+  if (after_change != NULL) {
+    free(after_change);
   }
-  if (after_change_x != NULL) {
-    free(after_change_x);
-  }
-  if (after_change_y != NULL) {
-    free(after_change_y);
-  }
+  // if (after_change_y != NULL) {
+  //   free(after_change_y);
+  // }
 }
 
 
@@ -166,22 +166,22 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 
   int change_neigh = 0;
 
-  int pos_x;
-  int pos_y;
+  int pos;
+  // int pos_y;
 
   for (int i = -1; i <= 1; i++) {
     for (int j = - 1; j <= 1; j++) {
-      pos_x = x/TILE_W + i;
-      pos_y = y/TILE_H + j;
-      if ((pos_x >= 0) && (pos_x < DIM/TILE_W) && (pos_y >= 0) && (pos_y < DIM/TILE_H)) {
-        if ((before_change_x[pos_x] == 1) && (before_change_y[pos_y] == 1)) {
+      pos = x/TILE_W + i + (y/TILE_H + j)*TILE_H;
+      // pos_y = y/TILE_H + j;
+      if ((pos >= 0) && (pos_x < DIM/TILE_W*DIM*TILE_H)) {
+        if ((before_change[pos] == 1)) {
           change_neigh = 1;
         }
       }
     }
   }
 
-  printf("%d", change_neigh);
+  // printf("%d", change_neigh);
 
   if (change_neigh == 1) {
     for (int i = y; i < y + height; i++) {
@@ -316,18 +316,18 @@ unsigned life_compute_omp (unsigned nb_iter)
     
     unsigned change = 0;
 
-    printf("\n");
+    // printf("\n");
     #pragma omp parallel for collapse(2) schedule(dynamic)
     for (int y = 0; y < DIM; y += TILE_H) {
       for (int x = 0; x < DIM; x += TILE_W) {
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
 
-        after_change_x[x/TILE_H] = check_change;
-        after_change_y[y/TILE_W] = check_change;
+        after_change[x/TILE_H + y] = check_change;
+        // after_change_y[y/TILE_W] = check_change;
       }
     }
-    printf("\nIteration ended\n\n");
+    // printf("\nIteration ended\n\n");
 
     store_change();
 
@@ -338,7 +338,7 @@ unsigned life_compute_omp (unsigned nb_iter)
       break;
     }
 
-    #pragma omp barrier
+    // #pragma omp barrier
   }
 
   free_has_changed();
