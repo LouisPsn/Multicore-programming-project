@@ -176,7 +176,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 
   long pos = i + j*TILE_W;
 
-  if (pos > 72000 && pos < 78000) {
+  if (pos < 72000 && pos > 78000) {
     long pos_1 = i + 1 + j*TILE_W;
     long pos_2 = i - 1 + j*TILE_W;
     long pos_3 = i + (j + 1)*TILE_W;
