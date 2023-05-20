@@ -171,18 +171,37 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 
   int change_neigh = 0;
 
-  int pos = 0;
-  // int pos_y;
-  pos = x/TILE_W + (y/TILE_H)*TILE_W;
-  // pos_y = y/TILE_H + j;
-  // if ((pos >= 0) && (pos < (DIM/TILE_W)*(DIM/TILE_H))) {
-  if ((before_change[pos - 1] == 1) || (before_change[pos + 1] == 1) || (before_change[pos] == 1) || (before_change[pos - 1*TILE_W] == 1) || 
-                                                                                                      (before_change[pos + 1*TILE_W] == 1)) {
-    change_neigh = 1;
+  int pos = x/TILE_W + (y/TILE_H)*TILE_W;
+  int pos_1 = x/TILE_W + 1 + (y/TILE_H)*TILE_W;
+  int pos_2 = x/TILE_W - 1+ (y/TILE_H)*TILE_W;
+  int pos_3 = x/TILE_W + (y/TILE_H + 1)*TILE_W;
+  int pos_4 = x/TILE_W + (y/TILE_H - 1)*TILE_W;
+  
+  if (pos >= 0 && pos < DIM/TILE_W*DIM/TILE_H) {
+    if (before_change[pos] == 1) {
+      change_neigh = 1;
+    }
   }
-  // }
-
-  // printf("%d", change_neigh);
+  if (pos_1 >= 0 && pos_1 < DIM/TILE_W*DIM/TILE_H) {
+    if (before_change[pos_1] == 1) {
+      change_neigh = 1;
+    }
+  }
+  if (pos_2 >= 0 && pos_2 < DIM/TILE_W*DIM/TILE_H) {
+    if (before_change[pos_2] == 1) {
+      change_neigh = 1;
+    }
+  }
+  if (pos_3 >= 0 && pos_3 < DIM/TILE_W*DIM/TILE_H) {
+    if (before_change[pos_3] == 1) {
+      change_neigh = 1;
+    }
+  }
+  if (pos_4 >= 0 && pos_4 < DIM/TILE_W*DIM/TILE_H) {
+    if (before_change[pos_4] == 1) {
+      change_neigh = 1;
+    }
+  }
 
   if (change_neigh == 1) {
     for (int i = y; i < y + height; i++) {
