@@ -14,10 +14,10 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static const char *before_change;
+static char *before_change;
 // static int *before_change_y;
 
-static const char *after_change;
+static char *after_change;
 // static int *after_change_y;
 
 
@@ -46,13 +46,13 @@ void init_has_changed() {
 }
 
 void store_change() {
-  // int tmp = 0;
+  int tmp = 0;
   // int tmp_y = 0;
-  strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
-  // for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
-  //   tmp = after_change[i];
-  //   before_change[i] = tmp;
-  // }
+  // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
+  for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
+    tmp = after_change[i];
+    before_change[i] = tmp;
+  }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   tmp_y = after_change_y[j];
   //   before_change_y[j] = tmp_y;
