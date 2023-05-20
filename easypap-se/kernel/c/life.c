@@ -14,10 +14,10 @@ typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
 
-static char *before_change;
+static char restrict *before_change;
 // static int *before_change_y;
 
-static char *after_change;
+static char restrict *after_change;
 // static int *after_change_y;
 
 
