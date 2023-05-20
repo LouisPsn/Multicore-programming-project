@@ -173,7 +173,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
 
   int i = x/TILE_W;
 
-  if (i == DIM/TILE_W/2) {
+  if (i != DIM/TILE_W/2) {
     int j = y/TILE_H;
 
     long pos = i + j*TILE_W;
