@@ -24,13 +24,13 @@ static int *after_change;
 void init_has_changed() {
 
   if (before_change == NULL) {
-    before_change = (int*)malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
+    before_change = malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
   }
   // if (before_change_y == NULL) {
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
   if (after_change == NULL) {
-    after_change = (int*)malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
+    after_change = malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
   }
   // if (after_change_y == NULL) {
   //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
@@ -49,7 +49,7 @@ void store_change() {
   int tmp = 0;
   // int tmp_y = 0;
   for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
-    tmp = after_change[i];
+    tmp = *after_change[i];
     before_change[i] = tmp;
   }
   // for (int j = 0; j < DIM/TILE_H; j++) {
