@@ -323,7 +323,7 @@ unsigned life_compute_omp (unsigned nb_iter)
         check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
         change |= check_change;
 
-        after_change[x/TILE_H + y] = (char) check_change;
+        after_change[x/TILE_W + y/TILE_H*TILE_W] = (char) check_change;
         // after_change_y[y/TILE_W] = check_change;
       }
     }
