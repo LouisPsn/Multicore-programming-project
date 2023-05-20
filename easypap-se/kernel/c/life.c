@@ -46,12 +46,12 @@ void init_has_changed() {
 }
 
 void store_change() {
-  char *tmp = 0;
+  char tmp = 0;
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
   for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
-    tmp = (char) after_change[i];
-    before_change[i] = (char) tmp;
+    tmp = after_change[i];
+    before_change[i] = tmp;
   }
   // for (int j = 0; j < DIM/TILE_H; j++) {
   //   tmp_y = after_change_y[j];
@@ -330,6 +330,7 @@ unsigned life_compute_omp (unsigned nb_iter)
     }
     // printf("\nIteration ended\n\n");
 
+    #pragma omp barrier
     store_change();
 
     swap_tables ();
@@ -339,7 +340,6 @@ unsigned life_compute_omp (unsigned nb_iter)
       break;
     }
 
-    #pragma omp barrier
   }
 
   // free_has_changed();
