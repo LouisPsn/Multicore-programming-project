@@ -212,9 +212,9 @@ int life_do_tile_sparse (int x, int y, int width, int height)
       }
     }
   
-    if (change == 1) {
-      printf("1");
-    }
+    // if (change == 1) {
+    //   printf("1");
+    // }
   }
 
   return change;
