@@ -24,7 +24,7 @@ static char *before_change;
 void init_has_changed() {
 
   if (before_change == NULL) {
-    before_change = malloc(sizeof(char)*DIM/TILE_W*DIM/TILE_H);
+    before_change = malloc(sizeof(char)*(DIM/TILE_W)*(DIM/TILE_H));
   }
   // if (before_change_y == NULL) {
   //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
@@ -35,7 +35,7 @@ void init_has_changed() {
   // if (after_change_y == NULL) {
   //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
   // }
-  for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
+  for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
     before_change[i] = 1;
     // after_change[i] = 1;
   }
@@ -49,7 +49,7 @@ void store_change(char* after_change) {
   char tmp = 0;
   // int tmp_y = 0;
   // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
-  for (int i = 0; i < DIM/TILE_W*DIM/TILE_H; i++) {
+  for (int i = 0; i < (DIM/TILE_W)*(DIM/TILE_H); i++) {
     tmp = after_change[i];
     before_change[i] = tmp;
   }
@@ -174,7 +174,7 @@ int life_do_tile_sparse (int x, int y, int width, int height)
     for (int j = - 1; j <= 1; j++) {
       pos = x/TILE_W + i + (y/TILE_H + j)*TILE_W;
       // pos_y = y/TILE_H + j;
-      if ((pos >= 0) && (pos < DIM/TILE_W*DIM*TILE_H)) {
+      if ((pos >= 0) && (pos < (DIM/TILE_W)*(DIM*TILE_H))) {
         if ((before_change[pos] == 1)) {
           change_neigh = 1;
         }
