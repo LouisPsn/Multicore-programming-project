@@ -341,7 +341,7 @@ unsigned life_compute_omp (unsigned nb_iter)
     #pragma omp barrier
   }
 
-  free_has_changed();
+  // free_has_changed();
 
   return res;
 }
