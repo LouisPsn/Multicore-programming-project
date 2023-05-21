@@ -34,4 +34,5 @@ options["-wt "] = ["default"]
 execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
 
 options ["-o "] = [""]
+options["-v "] = ["ocl"]
 execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
