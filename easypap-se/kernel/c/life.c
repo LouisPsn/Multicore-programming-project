@@ -278,8 +278,10 @@ int life_do_tile_AVX2 (int x, int y, int width, int height)
         {
           if (xloc != j || yloc != i)
           {
-            __m256i neighbor_vec = _mm256_loadu_si256((__m256i*)(&cur_table(yloc, xloc)));
-            n_vec = _mm256_add_epi32(n_vec, neighbor_vec);
+            if (yloc >= 0 && y < DIM && xloc >= 0 && xloc < DIM) {
+              __m256i neighbor_vec = _mm256_loadu_si256((__m256i*)(&cur_table(yloc, xloc)));
+              n_vec = _mm256_add_epi32(n_vec, neighbor_vec);
+            } 
           }
         }
       }
