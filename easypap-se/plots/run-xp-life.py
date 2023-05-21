@@ -11,7 +11,6 @@ options["-i "] = [100]
 options["-v "] = ["seq", "omp"]
 options["-wt "] = ["default", "sparse", "AVX2"]
 options["-s "] = [6208]
-options["-g "] = [4, 8, 16, 32]
 options["-a "] = ["meta3x3"]
 
 # Pour renseigner l'option '-of' il faut donner le chemin depuis le fichier easypap
