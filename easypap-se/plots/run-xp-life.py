@@ -8,7 +8,7 @@ import os
 options = {}
 options["-k "] = ["life"]
 options["-i "] = [100]
-options["-v "] = ["seq", "omp"]
+options["-v "] = ["omp"]
 options["-wt "] = ["default", "sparse", "AVX2"]
 options["-s "] = [6208]
 options["-a "] = ["meta3x3"]
