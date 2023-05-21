@@ -25,9 +25,9 @@ ompenv["OMP_PLACES="] = ["cores", "threads"]
 
 nbrun = 4
 # Lancement des experiences
-execute('../run ', ompenv, options, nbrun, verbose=True, easyPath=".")
+execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
 
 # Lancement de la version seq avec le nombre de thread impose a 1
 options["-v "] = ["seq"]
 ompenv["OMP_NUM_THREADS="] = [1]
-execute('../run', ompenv, options, nbrun, verbose=False, easyPath=".")
+execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
