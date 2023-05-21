@@ -10,7 +10,7 @@ options["-k "] = ["life"]
 options["-i "] = [40]
 # options["-v "] = ["omp"]
 # options["-wt "] = ["default", "AVX2"]
-options ["-o "]
+options ["-o "] = [""]
 options["-s "] = [6208]
 options["-a "] = ["meta3x3"]
 
