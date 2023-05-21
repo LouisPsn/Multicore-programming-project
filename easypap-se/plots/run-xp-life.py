@@ -9,7 +9,7 @@ options = {}
 options["-k "] = ["life"]
 options["-i "] = [40]
 options["-v "] = ["omp"]
-options["-wt "] = ["default", "sparse"]
+options["-wt "] = ["default", "AVX2"]
 options["-s "] = [6208]
 options["-a "] = ["meta3x3"]
 
