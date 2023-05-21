@@ -7,7 +7,7 @@ import os
 # Dictionnaire avec les options de compilations d'apres commande
 options = {}
 options["-k "] = ["life"]
-options["-i "] = [100]
+options["-i "] = [40]
 options["-v "] = ["omp"]
 options["-wt "] = ["default"]
 options["-s "] = [6208]
