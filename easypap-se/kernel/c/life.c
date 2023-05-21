@@ -317,6 +317,7 @@ int life_do_tile_AVX2 (int x, int y, int width, int height)
 //
 unsigned life_compute_seq (unsigned nb_iter)
 {
+  init_has_changed();
   for (unsigned it = 1; it <= nb_iter; it++) {
 
     int change = do_tile (0, 0, DIM, DIM, 0);
