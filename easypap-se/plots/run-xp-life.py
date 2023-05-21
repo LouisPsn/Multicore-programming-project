@@ -7,11 +7,13 @@ import os
 # Dictionnaire avec les options de compilations d'apres commande
 options = {}
 options["-k "] = ["life"]
-options["-i "] = [30]
-options["-v "] = ["omp", "omp_task"]
-options["-s "] = [1024, 2048]
+options["-i "] = [100]
+options["-v "] = ["seq", "omp"]
+options["-wt "] = ["default", "sparse", "AVX2"]
+options["-s "] = [6208]
 options["-g "] = [4, 8, 16, 32]
-options["-a "] = ["random"]
+options["-a "] = ["meta3x3"]
+options["-n "]
 
 # Pour renseigner l'option '-of' il faut donner le chemin depuis le fichier easypap
 options["-of "] = ["./plots/data/perf_data.csv"]
