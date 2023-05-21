@@ -307,7 +307,6 @@ int life_do_tile_AVX2 (int x, int y, int width, int height)
       }
     }
   }
-
   return change;
 }
 
