@@ -23,12 +23,12 @@ ompenv = {}
 # ompenv["OMP_NUM_THREADS="] = [1] + list(range(2, 9, 2))
 # ompenv["OMP_PLACES="] = ["cores", "threads"]
 
-nbrun = 1
+nbrun = 4
 # Lancement des experiences
-execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
+# execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
 
 # Lancement de la version seq avec le nombre de thread impose a 1
-options["-v "] = ["seq"]
-options["-wt "] = ["default"]
-ompenv["OMP_NUM_THREADS="] = [1]
-execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
+# options["-v "] = ["seq"]
+# options["-wt "] = ["default"]
+# ompenv["OMP_NUM_THREADS="] = [1]
+# execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
