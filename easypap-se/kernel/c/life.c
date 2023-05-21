@@ -2,6 +2,7 @@
 #include "easypap.h"
 #include "rle_lexer.h"
 
+#include <immintrin.h>
 #include <omp.h>
 #include <stdbool.h>
 #include <string.h>
@@ -13,6 +14,71 @@ static unsigned color = 0xFFFF00FF; // Living cells have the yellow color
 typedef unsigned cell_t;
 
 static cell_t *_table = NULL, *_alternate_table = NULL;
+
+static int *before_change;
+// static int *before_change_y;
+
+// static char *after_change;
+// static int *after_change_y;
+
+
+void init_has_changed() {
+
+  if (before_change == NULL) {
+    before_change = malloc(sizeof(int)*(DIM/TILE_W)*(DIM/TILE_H));
+  }
+  // if (before_change_y == NULL) {after_change[i];
+  //   before_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
+  // }
+  // if (after_change == NULL) {
+  //   after_change = malloc(sizeof(char)*DIM/TILE_W*DIM/TILE_H);
+  // }
+  // if (after_change_y == NULL) {
+  //   after_change_y = (int*)malloc(sizeof(int)*DIM/TILE_H);
+  // }
+  for (long i = 0; i < (long)((DIM/TILE_W)*(DIM/TILE_H)); i++) {
+    before_change[i] = 1;
+    // after_change[i] = 1;
+  }
+  // for (int j = 0; j < DIM/TILE_H; j++) {
+  //   before_change_y[j] = 1;
+  //   after_change_y[j] = 1;
+  // }
+}
+
+void store_change(int* after_change) {
+  // char tmp = 0;
+  // int tmp_y = 0;
+  // strncpy(before_change, after_change, DIM/TILE_W*DIM/TILE_H);
+  for (long i = 0; i < (long)((DIM/TILE_W)*(DIM/TILE_H)); i++) {
+    if(after_change[i] == 1) {
+       before_change[i] = 1;
+    }
+    else {
+      before_change[i] = 0;
+    }
+  }
+  // for (int j = 0; j < DIM/TILE_H; j++) {
+  //   tmp_y = after_change_y[j];
+  //   before_change_y[j] = tmp_y;
+  // }
+}
+
+void free_has_changed() {
+  if (before_change != NULL) {
+    free(before_change);
+  }
+  // if (before_change_y != NULL) {
+  //   free(before_change_y);
+  // }
+  // if (after_change != NULL) {
+  //   free(after_change);
+  // }
+  // if (after_change_y != NULL) {
+  //   free(after_change_y);
+  // }
+}
+
 
 static inline cell_t *table_cell (cell_t *restrict i, int y, int x)
 {
@@ -99,6 +165,153 @@ int life_do_tile_default (int x, int y, int width, int height)
   return change;
 }
 
+///////////////////////////// Tiling avoiding empty spaces
+int life_do_tile_sparse (int x, int y, int width, int height)
+{
+  int change = 0;
+
+  int change_neigh = 0;
+
+  int i = x/TILE_W;
+
+  if (i != DIM/TILE_W/2) {
+    int j = y/TILE_H;
+
+    long pos = i + j*TILE_W;
+    
+    long pos_1 = i + 1 + j*TILE_W;
+    long pos_2 = i - 1 + j*TILE_W;
+    long pos_3 = i + (j + 1)*TILE_W;
+    long pos_4 = i + (j - 1)*TILE_W; 
+    
+    if (pos >= 0 && pos < (long)((DIM/TILE_W)*(DIM/TILE_H))) {
+      if (before_change[pos] == 1) {
+        change_neigh = 1;
+      }
+    }
+    if (pos_1 >= 0 && pos_1 < (long)((DIM/TILE_W)*(DIM/TILE_H))) {
+      if (before_change[pos_1] == 1) {
+        change_neigh = 1;
+      }
+    }
+    if (pos_2 >= 0 && pos_2 < (long)((DIM/TILE_W)*(DIM/TILE_H))) {
+      if (before_change[pos_2] == 1) {
+        change_neigh = 1;
+      }
+    }
+    if (pos_3 >= 0 && pos_3 < (long)((DIM/TILE_W)*(DIM/TILE_H))) {
+      if (before_change[pos_3] == 1) {
+        change_neigh = 1;
+      }
+    }
+    if (pos_4 >= 0 && pos_4 < (long)((DIM/TILE_W)*(DIM/TILE_H))) {
+      if (before_change[pos_4] == 1) {
+        change_neigh = 1;
+      }
+    }
+  }
+  else {
+    change_neigh = 1;
+  }
+  
+
+  if (change_neigh == 1) {
+    for (int i = y; i < y + height; i++) {
+      for (int j = x; j < x + width; j++) {
+        if (j > 0 && j < DIM - 1 && i > 0 && i < DIM - 1) {
+          
+          unsigned n  = 0;
+          unsigned me = cur_table (i, j);
+
+          for (int yloc = i - 1; yloc < i + 2; yloc++)
+            for (int xloc = j - 1; xloc < j + 2; xloc++)
+              if (xloc != j || yloc != i)
+                n += cur_table(yloc, xloc);
+
+          if (me == 1 && n != 2 && n != 3)
+          {
+            me = 0;
+            change = 1;
+          }
+          else if (me == 0 && n == 3)
+          {
+            me = 1;
+            change = 1;
+          }
+
+          next_table(i, j) = me;
+        }
+      }
+    }
+  
+    // if (change == 1) {
+    //   printf("1");
+    // }
+  }
+
+  return change;
+}
+
+
+///////////////////////////// Tiling with AVX2 vectorisation
+int life_do_tile_AVX2 (int x, int y, int width, int height)
+{
+  int change = 0;
+
+  // Calculate the number of 32-cell vectors needed to cover the tile width and height
+  int vectorWidth = width / 32;
+  int vectorHeight = height / 32;
+
+  // Iterate over the tile using vectors of 32 cells
+  for (int i = y; i < y + vectorHeight * 32; i += 32)
+  {
+    for (int j = x; j < x + vectorWidth * 32; j += 32)
+    {
+      // Load the current 32-cell vectors
+      __m256i me_vec = _mm256_load_si256((__m256i*)(&cur_table(i,j)));
+      __m256i n_vec = _mm256_setzero_si256();
+
+      // Calculate the sum of neighbors using AVX2 intrinsics
+      for (int yloc = i - 1; yloc < i + 32 + 1; yloc++)
+      {
+        for (int xloc = j - 1; xloc < j + 32 + 1; xloc++)
+        {
+          if (xloc != j || yloc != i)
+          {
+            __m256i neighbor_vec = _mm256_loadu_si256((__m256i*)(&cur_table(yloc, xloc)));
+            n_vec = _mm256_add_epi32(n_vec, neighbor_vec);
+          }
+        }
+      }
+
+      // Subtract the current cell values from the sum of neighbors
+      n_vec = _mm256_sub_epi32(n_vec, me_vec);
+
+      // Create comparison masks for the conditions
+      __m256i two_vec = _mm256_set1_epi32(2);
+      __m256i three_vec = _mm256_set1_epi32(3);
+      __m256i mask1 = _mm256_cmpeq_epi32(me_vec, _mm256_set1_epi32(1));
+      __m256i mask2 = _mm256_andnot_si256(_mm256_cmpeq_epi32(n_vec, two_vec), _mm256_cmpeq_epi32(n_vec, three_vec));
+
+      // Apply the rules of the game using the masks
+      __m256i result_vec = _mm256_blendv_epi8(me_vec, _mm256_set1_epi32(0), mask1);
+      result_vec = _mm256_blendv_epi8(result_vec, _mm256_set1_epi32(1), mask2);
+
+      // Store the resulting vector in the next_table
+      _mm256_store_si256((__m256i*)(&next_table(i, j)), result_vec);
+
+      // Check if there was any change
+      if (!_mm256_testc_si256(me_vec, result_vec))
+      {
+        change = 1;
+      }
+    }
+  }
+
+  return change;
+}
+
+
 ///////////////////////////// Sequential version (seq)
 //
 unsigned life_compute_seq (unsigned nb_iter)
@@ -112,6 +325,7 @@ unsigned life_compute_seq (unsigned nb_iter)
 
     swap_tables ();
   }
+
 
   return 0;
 }
@@ -145,25 +359,46 @@ unsigned life_compute_tiled (unsigned nb_iter)
 //
 unsigned life_compute_omp (unsigned nb_iter)
 {
+  init_has_changed();
+
   unsigned res = 0;
+
+  char check_change = 0;
 
   for (unsigned it = 1; it <= nb_iter; it++) {
     
-      unsigned change = 0;
+    unsigned change = 0;
 
-      #pragma omp parallel for collapse(2) schedule(dynamic)
-      for (int y = 0; y < DIM; y += TILE_H)
-        for (int x = 0; x < DIM; x += TILE_W)
-          change |= do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
+    int *after_change = malloc(sizeof(int)*DIM/TILE_W*DIM/TILE_H);
 
-      swap_tables ();
+    // printf("\n");
+    #pragma omp parallel for collapse(2) schedule(dynamic)
+    for (int y = 0; y < DIM; y += TILE_H) {
+      for (int x = 0; x < DIM; x += TILE_W) {
+        check_change = do_tile (x, y, TILE_W, TILE_H, omp_get_thread_num());
+        change |= check_change;
 
-      if (!change) { // we stop if all cells are stable
-        res = it;
-        break;
+        after_change[x/TILE_W + (y/TILE_H)*TILE_W] = check_change;
+        // after_change_y[y/TILE_W] = check_change;
       }
-    
+    }
+    // printf("\nIteration ended\n\n");
+
+    #pragma omp barrier
+    store_change(after_change);
+
+    free(after_change);
+
+    swap_tables ();
+
+    if (!change) { // we stop if all cells are stable
+      res = it;
+      break;
+    }
+
   }
+
+  // free_has_changed();
 
   return res;
 }
