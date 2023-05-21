@@ -23,7 +23,7 @@ ompenv = {}
 # ompenv["OMP_NUM_THREADS="] = [1] + list(range(2, 9, 2))
 # ompenv["OMP_PLACES="] = ["cores", "threads"]
 
-ompenv["OMP_NUM_THREADS="] = [1]
+ompenv["Run n°="] = [1, 2, 3, 4]
 
 nbrun = 4
 # Lancement des experiences
