@@ -23,9 +23,9 @@ ompenv = {}
 # ompenv["OMP_NUM_THREADS="] = [1] + list(range(2, 9, 2))
 # ompenv["OMP_PLACES="] = ["cores", "threads"]
 
-ompenv["Run n°="] = [1, 2, 3, 4]
+ompenv["OMP_NUM_THREADS="] = [1]
 
-nbrun = 4
+nbrun = 1
 # Lancement des experiences
 execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
 
