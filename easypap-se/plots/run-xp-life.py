@@ -9,7 +9,7 @@ options = {}
 options["-k "] = ["life"]
 options["-i "] = [40]
 options["-v "] = ["omp"]
-options["-wt "] = ["default"]
+options["-wt "] = ["default, sparse"]
 options["-s "] = [6208]
 options["-a "] = ["meta3x3"]
 
@@ -27,6 +27,6 @@ nbrun = 1
 execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
 
 # Lancement de la version seq avec le nombre de thread impose a 1
-options["-v "] = ["seq"]
-ompenv["OMP_NUM_THREADS="] = [1]
-execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
+# options["-v "] = ["seq"]
+# ompenv["OMP_NUM_THREADS="] = [1]
+# execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
