@@ -8,8 +8,9 @@ import os
 options = {}
 options["-k "] = ["life"]
 options["-i "] = [40]
-options["-v "] = ["omp"]
-options["-wt "] = ["default", "AVX2"]
+# options["-v "] = ["omp"]
+# options["-wt "] = ["default", "AVX2"]
+options ["-o"]
 options["-s "] = [6208]
 options["-a "] = ["meta3x3"]
 
@@ -19,14 +20,15 @@ options["-of "] = ["./plots/data/perf_data.csv"]
 
 # Dictionnaire avec les options OMP
 ompenv = {}
-ompenv["OMP_NUM_THREADS="] = [1] + list(range(2, 9, 2))
-ompenv["OMP_PLACES="] = ["cores", "threads"]
+# ompenv["OMP_NUM_THREADS="] = [1] + list(range(2, 9, 2))
+# ompenv["OMP_PLACES="] = ["cores", "threads"]
 
 nbrun = 1
 # Lancement des experiences
 execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
 
 # Lancement de la version seq avec le nombre de thread impose a 1
-# options["-v "] = ["seq"]
-# ompenv["OMP_NUM_THREADS="] = [1]
-# execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
+options["-v "] = ["seq"]
+options["-wt "] = ["default"]
+ompenv["OMP_NUM_THREADS="] = [1]
+execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
