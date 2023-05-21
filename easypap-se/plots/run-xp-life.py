@@ -10,7 +10,6 @@ options["-k "] = ["life"]
 options["-i "] = [40]
 # options["-v "] = ["omp"]
 # options["-wt "] = ["default", "AVX2"]
-options ["-o "] = [""]
 options["-s "] = [6208]
 options["-a "] = ["meta3x3"]
 
@@ -27,10 +26,12 @@ ompenv["OMP_NUM_THREADS="] = [1]
 
 nbrun = 1
 # Lancement des experiences
-execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
 
 # Lancement de la version seq avec le nombre de thread impose a 1
-# options["-v "] = ["seq"]
-# options["-wt "] = ["default"]
+options["-v "] = ["seq"]
+options["-wt "] = ["default"]
 
-# execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
+execute('./run', ompenv, options, nbrun, verbose=False, easyPath=".")
+
+options ["-o "] = [""]
+execute('./run ', ompenv, options, nbrun, verbose=True, easyPath=".")
